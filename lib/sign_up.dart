@@ -1,11 +1,10 @@
+import 'package:FixNow/main.dart';
 import 'package:flutter/material.dart';
 import 'handyman_bookings.dart';
-import 'sign_up.dart';
-import 'package:rename/rename.dart';
-void main() => runApp(const FixNowApp());
+// import 'package:rename/rename.dart';
 
-class FixNowApp extends StatelessWidget {
-  const FixNowApp({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +34,17 @@ class FixNowApp extends StatelessWidget {
           ) 
           ],), 
           backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
-
+          automaticallyImplyLeading: true, // Automatically adds back arrow
+          leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Pop the current page and go back
+          },
+        ),
         ),
         body: const Center(child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[LoginForm()],
+          children: const <Widget>[SignUpForm()],
         )),
       ),
     );
@@ -49,16 +54,20 @@ class FixNowApp extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
 
   @override
-  State<LoginForm> createState() => LoginFormState();
+  State<SignUpForm> createState() => SignUpFormState();
 }
 
-class LoginFormState extends State<LoginForm> {
+class SignUpFormState extends State<SignUpForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController pwd = TextEditingController();
+  // final TextEditingController confirm_pwd = TextEditingController();
+
   bool obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -86,7 +95,7 @@ class LoginFormState extends State<LoginForm> {
                   children: <Widget>[
                     TextFormField(
                       decoration: InputDecoration(
-                        hintText: 'Enter your email',
+                        hintText: 'Enter your username',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -95,12 +104,29 @@ class LoginFormState extends State<LoginForm> {
                       scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter email id';
+                          return 'Please enter username';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(height: constraints.maxWidth * 0.02),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: 'Enter E-mail',
+                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      scrollPadding: const EdgeInsets.all(16.0),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter E-mail id';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: constraints.maxWidth * 0.02), // Responsive spacing
                     TextFormField(
                       obscureText: obscureText,
                       decoration: InputDecoration(
@@ -126,37 +152,42 @@ class LoginFormState extends State<LoginForm> {
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Text("Don't have an account?"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(context,MaterialPageRoute(builder: (context)=> const SignUpPage()));
-                          },
-                          child: const Text(
-                            'Sign up',
-                            style: TextStyle(
-                              color: Color.fromRGBO(100, 130, 173, 1),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                    SizedBox(height: constraints.maxWidth * 0.02), // Responsive spacing
+                    TextFormField(
+                      obscureText: obscureText,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm password',
+                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                      ],
+                        suffixIcon: IconButton(
+                          icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black,),
+                          onPressed: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        )
+                      ),
+                      scrollPadding: const EdgeInsets.all(16.0),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter password to confirm';
+                        }else if(value != pwd.text){
+                          return 'Passwords do not match';
+                        }
+                        return null;
+                      },
                     ),
-
+                    SizedBox(height: constraints.maxWidth * 0.02),
                     Center(
                       child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context)=>const HomePage())
-                          // );
+                        if(_formKey.currentState!.validate()){
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context)=> const Notifications())
+                            MaterialPageRoute(builder: (context)=> const FixNowApp())
                           );
                         }
                       },
@@ -169,7 +200,7 @@ class LoginFormState extends State<LoginForm> {
                         )
                       ),
                       child: const Text(
-                        'Login',
+                        'Sign Up',
                         style: TextStyle(
                           color: Color.fromRGBO(100, 130, 173, 10),
                           fontWeight: FontWeight.w700
