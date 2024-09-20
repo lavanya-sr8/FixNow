@@ -1,8 +1,34 @@
 import 'package:flutter/material.dart';
 import 'handyman_bookings.dart';
 import 'sign_up.dart';
+// import 'header.dart';
 import 'package:rename/rename.dart';
 void main() => runApp(const FixNowApp());
+
+// class FixNowApp extends StatelessWidget {
+//   const FixNowApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'FixNow: Find, Hire, Fix!',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: Scaffold(
+//         appBar: Header(showBackArrow: false), // Use the Header widget instead of AppBar
+//         body: const Center(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               LoginForm(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class FixNowApp extends StatelessWidget {
   const FixNowApp({super.key});

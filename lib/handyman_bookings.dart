@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:FixNow/confirmation_page.dart';
+import 'package:FixNow/rejection_page.dart';
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});
@@ -65,9 +67,7 @@ class BookingSet extends State<Bookings> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              counter++;
-                            });
+                            confirm(context,'Would you like to confirm the acceptance of the request?', ConfirmationPage());
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(buttonWidth, 50), // Set button width and height
@@ -86,9 +86,7 @@ class BookingSet extends State<Bookings> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              counter--;
-                            });
+                            confirm(context,'Would you like to reject the request?', RejectionPage());
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(buttonWidth, 50), // Set button width and height
@@ -116,4 +114,39 @@ class BookingSet extends State<Bookings> {
       );
     });
   }
+}
+
+void confirm(BuildContext context, String message, Widget nextPage){
+  Widget cancelButton = TextButton(
+    child: Text('Cancel'),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  Widget okButton = TextButton(
+    child: Text('OK'),
+    onPressed: () {
+      Navigator.of(context).pop();
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> nextPage));
+    },
+  );
+  
+  AlertDialog confirmAlert = AlertDialog(
+    title: Text('Confirm Booking',
+    style: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w500
+    ),),
+    content: Text(message),
+    actions: [
+      cancelButton, okButton
+    ],
+  );
+  
+  showDialog(
+    context: context,
+    builder: (BuildContext context){
+      return confirmAlert;
+    });
 }
