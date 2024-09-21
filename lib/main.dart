@@ -50,7 +50,7 @@ class FixNowApp extends StatelessWidget {
           toolbarHeight: toolbarHeight,
           title: 
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Image.asset('assets/fixnow_light.png', fit: BoxFit.cover, height: iconSize, width: iconSize),
+            Image.asset('assets/fixnow_dark.png', fit: BoxFit.cover, height: iconSize, width: iconSize),
             Text(
             'FixNow!',
             style: TextStyle(
