@@ -59,6 +59,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/fixnow_light.png
+    - assets/fixnow_dark.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
