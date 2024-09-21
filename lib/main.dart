@@ -84,7 +84,17 @@ class LoginForm extends StatefulWidget {
 
 class LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool obscureText = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // State for password visibility
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -92,9 +102,9 @@ class LoginFormState extends State<LoginForm> {
         double widthFactor;
         double buttonWidth = constraints.maxWidth * 0.5;
         if (constraints.maxWidth <= 800) {
-          widthFactor = 1.0; 
+          widthFactor = 1.0;
         } else {
-          widthFactor = 0.5; 
+          widthFactor = 0.5;
         }
 
         final double formWidth = constraints.maxWidth * widthFactor;
@@ -111,7 +121,9 @@ class LoginFormState extends State<LoginForm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextFormField(
+                      controller: _emailController, // Email controller added
                       decoration: InputDecoration(
+                        labelText: 'Email',
                         hintText: 'Enter your email',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
@@ -121,33 +133,42 @@ class LoginFormState extends State<LoginForm> {
                       scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter email id';
+                          return 'Please enter email';
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
                     TextFormField(
-                      obscureText: obscureText,
+                      controller: _passwordController, // Password controller added
+                      obscureText: !_isPasswordVisible, // Password visibility toggle added
                       decoration: InputDecoration(
+                        labelText: 'Password',
                         hintText: 'Enter password',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black,),
+                          icon: Icon(
+                            _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            color: Colors.black,
+                          ),
                           onPressed: () {
                             setState(() {
-                              obscureText = !obscureText;
+                              _isPasswordVisible = !_isPasswordVisible; // Toggle password visibility
                             });
                           },
-                        )
+                        ),
                       ),
                       scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter password';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
                         }
                         return null;
                       },
@@ -159,7 +180,7 @@ class LoginFormState extends State<LoginForm> {
                         const Text("Don't have an account?"),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context,MaterialPageRoute(builder: (context)=> const SignUpPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
                           },
                           child: const Text(
                             'Sign up',
@@ -171,38 +192,32 @@ class LoginFormState extends State<LoginForm> {
                         ),
                       ],
                     ),
-
                     Center(
                       child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context)=>const HomePage())
-                          // );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context)=> const Notifications())
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(buttonWidth, 50), // Full-width button within the form width
-                        backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
-                        
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                        )
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const Notifications()),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(buttonWidth, 50), // Full-width button within the form width
+                          backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Color.fromRGBO(100, 130, 173, 10),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Color.fromRGBO(100, 130, 173, 10),
-                          fontWeight: FontWeight.w700
-                        ),),
                     ),
-                    )
-                    
                   ],
                 ),
               ),

@@ -67,6 +67,8 @@ class SignUpFormState extends State<SignUpForm> {
   // final TextEditingController confirm_pwd = TextEditingController();
 
   bool obscureText = true;
+  bool obscureTextConfirm = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +97,7 @@ class SignUpFormState extends State<SignUpForm> {
                   children: <Widget>[
                     TextFormField(
                       decoration: InputDecoration(
+                        labelText: 'Username',
                         hintText: 'Enter your username',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
@@ -112,6 +115,7 @@ class SignUpFormState extends State<SignUpForm> {
                     SizedBox(height: constraints.maxWidth * 0.02),
                     TextFormField(
                       decoration: InputDecoration(
+                        labelText: 'E-mail',
                         hintText: 'Enter E-mail',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
@@ -130,6 +134,7 @@ class SignUpFormState extends State<SignUpForm> {
                     TextFormField(
                       obscureText: obscureText,
                       decoration: InputDecoration(
+                        labelText: 'Password',
                         hintText: 'Enter password',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
@@ -154,18 +159,19 @@ class SignUpFormState extends State<SignUpForm> {
                     ),
                     SizedBox(height: constraints.maxWidth * 0.02), // Responsive spacing
                     TextFormField(
-                      obscureText: obscureText,
+                      obscureText: obscureTextConfirm,
                       decoration: InputDecoration(
+                        labelText: 'Confirm password',
                         hintText: 'Confirm password',
                         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black,),
+                          icon: Icon(obscureTextConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black,),
                           onPressed: () {
                             setState(() {
-                              obscureText = !obscureText;
+                              obscureTextConfirm = !obscureTextConfirm;
                             });
                           },
                         )
