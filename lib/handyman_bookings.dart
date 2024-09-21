@@ -67,7 +67,7 @@ class BookingSet extends State<Bookings> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            confirm(context,'Would you like to confirm the acceptance of the request?', ConfirmationPage());
+                            // confirm(context,'Would you like to confirm the acceptance of the request?', ConfirmationPage());
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(buttonWidth, 50), // Set button width and height
@@ -86,7 +86,7 @@ class BookingSet extends State<Bookings> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            confirm(context,'Would you like to reject the request?', RejectionPage());
+                            // confirm(context,'Would you like to reject the request?', RejectionPage());
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(buttonWidth, 50), // Set button width and height
