@@ -1,6 +1,5 @@
 import 'package:FixNow/main.dart';
 import 'package:flutter/material.dart';
-import 'handyman_bookings.dart';
 // import 'package:rename/rename.dart';
 
 class SignUpPage extends StatelessWidget {

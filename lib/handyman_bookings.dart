@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:FixNow/confirmation_page.dart';
-import 'package:FixNow/rejection_page.dart';
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});
