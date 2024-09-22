@@ -1,3 +1,4 @@
+import 'package:FixNow/ser_handyman.dart';
 import 'package:flutter/material.dart';
 
 class UserProfile extends StatelessWidget {
@@ -11,156 +12,169 @@ class UserProfile extends StatelessWidget {
           'FixNow!',
           style: TextStyle(
             fontWeight: FontWeight.w300,
-            color: Color(0xFFEBF4F6), // Text color EBF4F6
+            color: Color(0xFFEBF4F6),
             fontSize: 50.0,
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF071952), // Background color #071952
-        toolbarHeight: 100, // Blue filled space with the FixNow! text
+        backgroundColor: const Color(0xFF071952),
+        toolbarHeight: 100,
       ),
-      body: SingleChildScrollView( // Added to allow scrolling
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Center(
-          child: Column(
-            children: [
-              // Input for name
-              const SizedBox(
-                width: 300, // Adjust width as per your preference
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter your name',
-                    labelStyle: TextStyle(color: Colors.grey), // Default label color
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF37B7C3), // Set the focused border color
-                      ),
-                    ),
-                    floatingLabelStyle: TextStyle(
-                      color: Color(0xFF37B7C3), // Change label color when focused
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Input for phone number
-              const SizedBox(
-                width: 300, // Adjust width as per your preference
-                child: TextField(
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your phone number',
-                    labelStyle: TextStyle(color: Colors.grey), // Default label color
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF37B7C3), // Set the focused border color
-                      ),
-                    ),
-                    floatingLabelStyle: TextStyle(
-                      color: Color(0xFF37B7C3), // Change label color when focused
-                    ),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              double formWidth = constraints.maxWidth;
+              if (constraints.maxWidth <= 800) {
+                formWidth = constraints.maxWidth;
+              } else {
+                formWidth = constraints.maxWidth * 0.5;
+              }
 
-              // Input for email
-               const SizedBox(
-                width: 300, // Adjust width as per your preference
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your email ID',
-                    labelStyle: TextStyle(color: Colors.grey), // Default label color
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF37B7C3), // Set the focused border color
+              return Column(
+                children: [
+                  // Input for name
+                  SizedBox(
+                    width: formWidth,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Enter your name',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF37B7C3),
+                          ),
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: Color(0xFF37B7C3),
+                        ),
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                    floatingLabelStyle: TextStyle(
-                      color: Color(0xFF37B7C3), // Change label color when focused
-                    ),
-                    border: OutlineInputBorder(),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-              // Input for Aadhaar number
-               const SizedBox(
-                width: 300, // Adjust width as per your preference
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your Aadhaar number',
-                    labelStyle: TextStyle(color: Colors.grey), // Default label color
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF37B7C3), // Set the focused border color
+                  // Input for phone number
+                  SizedBox(
+                    width: formWidth,
+                    child: TextField(
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your phone number',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF37B7C3),
+                          ),
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: Color(0xFF37B7C3),
+                        ),
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                    floatingLabelStyle: TextStyle(
-                      color: Color(0xFF37B7C3), // Change label color when focused
-                    ),
-                    border: OutlineInputBorder(),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-               // Input for address
-              const SizedBox(
-                width: 300, // Adjust width as per your preference
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter your address',
-                    labelStyle: TextStyle(color: Colors.grey), // Default label color
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF37B7C3), // Set the focused border color
+                  const SizedBox(height: 20),
+
+                  // Input for email
+                  SizedBox(
+                    width: formWidth,
+                    child: TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your email ID',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF37B7C3),
+                          ),
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: Color(0xFF37B7C3),
+                        ),
+                        border: OutlineInputBorder(),
                       ),
                     ),
-                    floatingLabelStyle: TextStyle(
-                      color: Color(0xFF37B7C3), // Change label color when focused
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Input for Aadhaar number
+                  SizedBox(
+                    width: formWidth,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your Aadhaar number',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF37B7C3),
+                          ),
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: Color(0xFF37B7C3),
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                    border: OutlineInputBorder(),
                   ),
-                  maxLines: 3, // Allowing multi-line input for the address
-                ),
-              ),
-              const SizedBox(height: 40),
-               // SAVE button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF37B7C3), // Button filled with 37B7C3
-                  padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 70.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                  const SizedBox(height: 20),
+
+                  // Input for address
+                  SizedBox(
+                    width: formWidth,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Enter your address',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF37B7C3),
+                          ),
+                        ),
+                        floatingLabelStyle: TextStyle(
+                          color: Color(0xFF37B7C3),
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  // Add save functionality here
-                },
-                child: const Text(
-                  'SAVE',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Color(0xFFEBF4F6), // Text color EBF4F6
+                  const SizedBox(height: 40),
+
+                  // SAVE button
+                  ElevatedButton(
+                    onPressed: () {
+                // Navigate to ServHandyman page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ServHandyman()),
+                );
+              },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF37B7C3),
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 70.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    
+                      
+                    child: const Text(
+                      'SAVE',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Color(0xFFEBF4F6),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ),
-     ),
-);
+      ),
+    );
+  }
 }
-}
-
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'handyman_bookings.dart';
 import 'sign_up.dart';
+import 'package:FixNow/user_profile.dart';
+
 // import 'header.dart';
 //import 'package:rename/rename.dart';
 void main() => runApp(const FixNowApp());
@@ -35,43 +36,42 @@ class FixNowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double toolbarHeight = constraints.maxHeight * 0.1;
-        double appBarFontSize = toolbarHeight*0.5;
-        double iconSize = appBarFontSize*1.5;
-        return MaterialApp(
-      title: 'FixNow: Find, Hire, Fix!',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: toolbarHeight,
-          title: 
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Image.asset('assets/fixnow_dark.png', fit: BoxFit.cover, height: iconSize, width: iconSize),
-            Text(
-            'FixNow!',
-            style: TextStyle(
-              fontWeight: FontWeight.w300,
-              color: Colors.white,
-              fontSize: appBarFontSize
-            ),
-          ) 
-          ],), 
-          backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
-
+    return LayoutBuilder(builder: (context, constraints) {
+      double toolbarHeight = constraints.maxHeight * 0.1;
+      double appBarFontSize = toolbarHeight * 0.5;
+      double iconSize = appBarFontSize * 1.5;
+      return MaterialApp(
+        title: 'FixNow: Find, Hire, Fix!',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-        body: const Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[LoginForm()],
-        )),
-      ),
-    );
-      }
+        home: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: toolbarHeight,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/fixnow_dark.png',
+                    fit: BoxFit.cover, height: iconSize, width: iconSize),
+                Text(
+                  'FixNow!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white,
+                      fontSize: appBarFontSize),
+                )
+              ],
+            ),
+            backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
+          ),
+          body: const Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[LoginForm()],
+          )),
+        ),
       );
-    
+    });
   }
 }
 
@@ -111,7 +111,8 @@ class LoginFormState extends State<LoginForm> {
 
         return Container(
           color: const Color.fromRGBO(240, 221, 169, 0.004),
-          padding: EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
+          padding:
+              EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
           child: Center(
             child: SizedBox(
               width: formWidth,
@@ -125,7 +126,8 @@ class LoginFormState extends State<LoginForm> {
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -134,31 +136,40 @@ class LoginFormState extends State<LoginForm> {
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(
+                        height:
+                            constraints.maxWidth * 0.05), // Responsive spacing
                     TextFormField(
-                      controller: _passwordController, // Password controller added
-                      obscureText: !_isPasswordVisible, // Password visibility toggle added
+                      controller:
+                          _passwordController, // Password controller added
+                      obscureText:
+                          !_isPasswordVisible, // Password visibility toggle added
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter password',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            _isPasswordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: Colors.black,
                           ),
                           onPressed: () {
                             setState(() {
-                              _isPasswordVisible = !_isPasswordVisible; // Toggle password visibility
+                              _isPasswordVisible =
+                                  !_isPasswordVisible; // Toggle password visibility
                             });
                           },
                         ),
@@ -173,14 +184,19 @@ class LoginFormState extends State<LoginForm> {
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(
+                        height:
+                            constraints.maxWidth * 0.05), // Responsive spacing
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         const Text("Don't have an account?"),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpPage()));
                           },
                           child: const Text(
                             'Sign up',
@@ -198,13 +214,16 @@ class LoginFormState extends State<LoginForm> {
                           if (_formKey.currentState!.validate()) {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const Notifications()),
+                              MaterialPageRoute(
+                                  builder: (context) => const UserProfile()),
                             );
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(buttonWidth, 50), // Full-width button within the form width
-                          backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
+                          minimumSize: Size(buttonWidth,
+                              50), // Full-width button within the form width
+                          backgroundColor:
+                              const Color.fromRGBO(226, 241, 255, 0.643),
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),

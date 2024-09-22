@@ -1,4 +1,6 @@
+import 'package:FixNow/handyman_registration_page.dart';
 import 'package:flutter/material.dart';
+import 'package:FixNow/service_selection_page.dart';
 
 class ServHandyman extends StatelessWidget {
   const ServHandyman({super.key});
@@ -31,14 +33,21 @@ class ServHandyman extends StatelessWidget {
                 // "Service" Button with teal background and white text
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF37B7C3), // Button filled with 37B7C3
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 70.0),
+                    backgroundColor:
+                        const Color(0xFF37B7C3), // Button filled with 37B7C3
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 70.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    // Navigate to ServHandyman page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ServiceSelectionPage()),
+                    );
                   },
                   child: const Text(
                     'Service',
@@ -53,15 +62,23 @@ class ServHandyman extends StatelessWidget {
                 // "Handyman" Button with teal background and white text
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF37B7C3), // Button filled with 37B7C3
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 60.0),
+                    backgroundColor:
+                        const Color(0xFF37B7C3), // Button filled with 37B7C3
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 60.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/customer');
+                    // Navigate to ServHandyman page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HandymanRegistrationPage()),
+                    );
                   },
+                  
                   child: const Text(
                     'Handyman',
                     style: TextStyle(
@@ -74,11 +91,7 @@ class ServHandyman extends StatelessWidget {
             ),
           ),
         ],
-        ),
-);
+      ),
+    );
+  }
 }
-}
-
-
-
-             
