@@ -74,9 +74,9 @@ class ServHandyman extends StatelessWidget {
             ),
           ),
         ],
-         ),
-    );
-  }
+        ),
+);
+}
 }
 
 
