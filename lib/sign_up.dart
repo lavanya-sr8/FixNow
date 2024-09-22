@@ -44,7 +44,7 @@ class SignUpPage extends StatelessWidget {
         ),
         body: const Center(child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[SignUpForm()],
+          children: <Widget>[SignUpForm()],
         )),
       ),
     );

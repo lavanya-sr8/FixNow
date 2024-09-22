@@ -25,9 +25,9 @@ class UserProfile extends StatelessWidget {
           child: Column(
             children: [
               // Input for name
-              SizedBox(
+              const SizedBox(
                 width: 300, // Adjust width as per your preference
-                child: const TextField(
+                child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter your name',
                     labelStyle: TextStyle(color: Colors.grey), // Default label color
@@ -45,9 +45,9 @@ class UserProfile extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               // Input for phone number
-              SizedBox(
+              const SizedBox(
                 width: 300, // Adjust width as per your preference
-                child: const TextField(
+                child: TextField(
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelText: 'Enter your phone number',
@@ -67,9 +67,9 @@ class UserProfile extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Input for email
-               SizedBox(
+               const SizedBox(
                 width: 300, // Adjust width as per your preference
-                child: const TextField(
+                child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Enter your email ID',
@@ -89,9 +89,9 @@ class UserProfile extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Input for Aadhaar number
-               SizedBox(
+               const SizedBox(
                 width: 300, // Adjust width as per your preference
-                child: const TextField(
+                child: TextField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Enter your Aadhaar number',
@@ -110,9 +110,9 @@ class UserProfile extends StatelessWidget {
               ),
               const SizedBox(height: 20),
                // Input for address
-              SizedBox(
+              const SizedBox(
                 width: 300, // Adjust width as per your preference
-                child: const TextField(
+                child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter your address',
                     labelStyle: TextStyle(color: Colors.grey), // Default label color

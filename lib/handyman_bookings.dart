@@ -91,7 +91,7 @@ class BookingSet extends State<Bookings> {
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(buttonWidth, 50), // Set button width and height
                             backgroundColor:
-                                Color.fromRGBO(255, 205, 205, 0.627),
+                                const Color.fromRGBO(255, 205, 205, 0.627),
                             textStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
@@ -118,14 +118,14 @@ class BookingSet extends State<Bookings> {
 
 void confirm(BuildContext context, String message, Widget nextPage){
   Widget cancelButton = TextButton(
-    child: Text('Cancel'),
+    child: const Text('Cancel'),
     onPressed: () {
       Navigator.of(context).pop();
     },
   );
 
   Widget okButton = TextButton(
-    child: Text('OK'),
+    child: const Text('OK'),
     onPressed: () {
       Navigator.of(context).pop();
       Navigator.push(context, MaterialPageRoute(builder: (context)=> nextPage));
@@ -133,7 +133,7 @@ void confirm(BuildContext context, String message, Widget nextPage){
   );
   
   AlertDialog confirmAlert = AlertDialog(
-    title: Text('Confirm Booking',
+    title: const Text('Confirm Booking',
     style: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w500

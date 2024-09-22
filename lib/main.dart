@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'handyman_bookings.dart';
 import 'sign_up.dart';
 // import 'header.dart';
-import 'package:rename/rename.dart';
+//import 'package:rename/rename.dart';
 void main() => runApp(const FixNowApp());
 
 // class FixNowApp extends StatelessWidget {
@@ -65,7 +65,7 @@ class FixNowApp extends StatelessWidget {
         ),
         body: const Center(child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[LoginForm()],
+          children: <Widget>[LoginForm()],
         )),
       ),
     );
