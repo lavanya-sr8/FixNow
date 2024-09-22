@@ -1,4 +1,4 @@
-import 'package:FixNow/main.dart';
+import 'package:FixNow/user_profile.dart';
 import 'package:flutter/material.dart';
 // import 'package:rename/rename.dart';
 
@@ -192,7 +192,7 @@ class SignUpFormState extends State<SignUpForm> {
                         if(_formKey.currentState!.validate()){
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context)=> const FixNowApp())
+                            MaterialPageRoute(builder: (context)=> const UserProfile())
                           );
                         }
                       },
