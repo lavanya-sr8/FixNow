@@ -1,9 +1,10 @@
 import 'package:FixNow/ser_handyman.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key});
-
+   const UserProfile({super.key});
+   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +13,7 @@ class UserProfile extends StatelessWidget {
           'FixNow!',
           style: TextStyle(
             fontWeight: FontWeight.w300,
-            color: Color(0xFFEBF4F6),
+            color: Color.fromARGB(255, 1, 1, 1),
             fontSize: 50.0,
           ),
         ),
@@ -146,21 +147,21 @@ class UserProfile extends StatelessWidget {
                   // SAVE button
                   ElevatedButton(
                     onPressed: () {
-                // Navigate to ServHandyman page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ServHandyman()),
-                );
-              },
+                      // Navigate to ServHandyman page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ServHandyman()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF37B7C3),
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 70.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 70.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    
-                      
                     child: const Text(
                       'SAVE',
                       style: TextStyle(

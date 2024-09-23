@@ -192,7 +192,7 @@ class SignUpFormState extends State<SignUpForm> {
                         if(_formKey.currentState!.validate()){
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context)=> const UserProfile())
+                            MaterialPageRoute(builder: (context)=>  const UserProfile())
                           );
                         }
                       },

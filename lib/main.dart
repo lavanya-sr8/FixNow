@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'sign_up.dart';
 import 'package:FixNow/user_profile.dart';
 
+
 // import 'header.dart';
 //import 'package:rename/rename.dart';
 void main() => runApp(const FixNowApp());
@@ -33,6 +34,9 @@ void main() => runApp(const FixNowApp());
 
 class FixNowApp extends StatelessWidget {
   const FixNowApp({super.key});
+  
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +219,7 @@ class LoginFormState extends State<LoginForm> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const UserProfile()),
+                                  builder: (context) =>   UserProfile()),
                             );
                           }
                         },
