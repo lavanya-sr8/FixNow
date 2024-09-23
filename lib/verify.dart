@@ -1,3 +1,4 @@
+import 'package:FixNow/reject.dart';
 import 'package:FixNow/success.dart';
 import 'package:flutter/material.dart';
 
@@ -75,6 +76,11 @@ class Verify extends StatelessWidget {
                     const SizedBox(width: 20), // Space between buttons
                     ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Reject()),
+                        );
                         // Reject button action
                       },
                       style: ElevatedButton.styleFrom(
