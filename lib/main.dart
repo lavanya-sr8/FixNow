@@ -47,6 +47,7 @@ class FixNowApp extends StatelessWidget {
       double appBarFontSize = toolbarHeight * 0.5;
       double iconSize = appBarFontSize * 1.5;
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'FixNow: Find, Hire, Fix!',
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -68,7 +69,7 @@ class FixNowApp extends StatelessWidget {
                 )
               ],
             ),
-            backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
+            backgroundColor: const Color(0xFF071952),
           ),
           body: const Center(
               child: Column(
@@ -207,7 +208,7 @@ class LoginFormState extends State<LoginForm> {
                           child: const Text(
                             'Sign up',
                             style: TextStyle(
-                              color: Color.fromRGBO(100, 130, 173, 1),
+                              color: Colors.blue,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -228,8 +229,8 @@ class LoginFormState extends State<LoginForm> {
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(buttonWidth,
                               50), // Full-width button within the form width
-                          backgroundColor:
-                              const Color.fromRGBO(226, 241, 255, 0.643),
+                         backgroundColor: const Color(0xFF00B4D8),
+
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -237,7 +238,7 @@ class LoginFormState extends State<LoginForm> {
                         child: const Text(
                           'Login',
                           style: TextStyle(
-                            color: Color.fromRGBO(100, 130, 173, 10),
+                            color: Color.fromRGBO(255, 255, 255, 0.965),
                             fontWeight: FontWeight.w700,
                           ),
                         ),

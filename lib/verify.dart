@@ -31,7 +31,8 @@ class Verify extends StatelessWidget {
               children: <Widget>[
                 // User information box
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 40.0, vertical: 10.0),
                   child: Container(
                     padding: const EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
@@ -46,7 +47,7 @@ class Verify extends StatelessWidget {
                     ),
                   ),
                 ),
-                 const SizedBox(height: 30.0), // Space before buttons
+                const SizedBox(height: 30.0), // Space before buttons
 
                 // Accept and Reject buttons
                 Row(
@@ -55,18 +56,20 @@ class Verify extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Success()),
-                    );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Success()),
+                        );
                         // Accept button action
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF37B7C3), // Button color
+                        backgroundColor: const Color(0xFF00B4D8),
+                        // Button color
                       ),
                       child: const Text(
                         'Accept',
-                        style: TextStyle(color: Color(0xFFEBF4F6)), // Text color
+                        style:
+                            TextStyle(color: Color(0xFFEBF4F6)), // Text color
                       ),
                     ),
                     const SizedBox(width: 20), // Space between buttons
@@ -75,11 +78,13 @@ class Verify extends StatelessWidget {
                         // Reject button action
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF37B7C3), // Button color
+                        backgroundColor: const Color(0xFF00B4D8),
+                        // Button color
                       ),
                       child: const Text(
                         'Reject',
-                        style: TextStyle(color: Color(0xFFEBF4F6)), // Text color
+                        style:
+                            TextStyle(color: Color(0xFFEBF4F6)), // Text color
                       ),
                     ),
                   ],
@@ -88,10 +93,7 @@ class Verify extends StatelessWidget {
             ),
           ),
         ],
-     ),
-);
+      ),
+    );
+  }
 }
-}
-                      
-
-

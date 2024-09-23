@@ -44,12 +44,14 @@ class ServiceSelectionPage extends StatelessWidget {
       Service(
         icon: Icons.brush,
         title: 'Painting',
-        description: 'Professional painting services for interior and exterior.',
+        description:
+            'Professional painting services for interior and exterior.',
       ),
       Service(
         icon: Icons.handyman,
         title: 'General Handyman',
-        description: 'A variety of handyman services for your home or business.',
+        description:
+            'A variety of handyman services for your home or business.',
       ),
     ];
 
@@ -102,7 +104,8 @@ class ServiceCard extends StatelessWidget {
                   Icon(icon, size: 48.0),
                   const SizedBox(width: 16.0),
                   Expanded(
-                    child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text(title,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -114,12 +117,14 @@ class ServiceCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HandymanListPage(selectedService: title),
+                      builder: (context) =>
+                          HandymanListPage(selectedService: title),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
+                  backgroundColor: const Color(0xFF00B4D8),
+
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('Select'),
@@ -148,36 +153,37 @@ class _HandymanListPageState extends State<HandymanListPage> {
       experience: '5 years',
       rating: 4.8,
       imageUrl: 'assets/handyman1.jpg',
-      services: ['Plumbing', 'Electrical','Painting'],
+      services: ['Plumbing', 'Electrical', 'Painting'],
     ),
     Handyman(
       name: 'Jane Doe',
       experience: '3 years',
       rating: 4.5,
       imageUrl: 'assets/handyman2.jpg',
-      services: ['Carpentry', 'Painting','Plumbing','Electrical'],
+      services: ['Carpentry', 'Painting', 'Plumbing', 'Electrical'],
     ),
     Handyman(
       name: 'Person 3',
       experience: '2 years',
       rating: 4.2,
       imageUrl: 'assets/handyman3.jpg',
-      services: ['Plumbing', 'Painting','Electrical'],
+      services: ['Plumbing', 'Painting', 'Electrical'],
     ),
     Handyman(
       name: 'Person 4',
       experience: '4 years',
       rating: 4.7,
       imageUrl: 'assets/handyman4.jpg',
-      services: ['Electrical', 'Carpentry','Plumbing'],
+      services: ['Electrical', 'Carpentry', 'Plumbing'],
     ),
     // Add more handymen as needed
   ];
 
   @override
   Widget build(BuildContext context) {
-    final filteredHandymen = handymen.where((handyman) =>
-        handyman.services.contains(widget.selectedService)).toList();
+    final filteredHandymen = handymen
+        .where((handyman) => handyman.services.contains(widget.selectedService))
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -217,7 +223,8 @@ class HandymanCard extends StatelessWidget {
                 children: [
                   Text(
                     handyman.name,
-                    style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4.0),
                   Row(
@@ -230,7 +237,8 @@ class HandymanCard extends StatelessWidget {
                       const SizedBox(width: 8.0),
                       Text(
                         '(${handyman.experience} years exp.)',
-                        style: const TextStyle(fontSize: 12.0, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12.0, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -245,15 +253,14 @@ class HandymanCard extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SchedulePage ()),
-                    );
+                  context,
+                  MaterialPageRoute(builder: (context) => SchedulePage()),
+                );
                 // Implement booking logic or navigate to booking page
-               
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Set the button color to blue
+                backgroundColor: const Color(0xFF00B4D8),
+                // Set the button color to blue
                 foregroundColor: Colors.white, // Set the text color to white
               ),
               child: const Text('Book Now'),

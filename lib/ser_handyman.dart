@@ -24,7 +24,7 @@ class ServHandyman extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Container(
-            color: const Color(0xFFEBF4F6), // Set background color to EBF4F6
+            color: const Color.fromARGB(255, 255, 255, 255), // Set background color to EBF4F6
           ),
           Center(
             child: Column(
@@ -33,8 +33,8 @@ class ServHandyman extends StatelessWidget {
                 // "Service" Button with teal background and white text
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF37B7C3), // Button filled with 37B7C3
+                    backgroundColor: const Color(0xFF00B4D8),
+// Button filled with 37B7C3
                     padding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 70.0),
                     shape: RoundedRectangleBorder(
@@ -62,8 +62,8 @@ class ServHandyman extends StatelessWidget {
                 // "Handyman" Button with teal background and white text
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF37B7C3), // Button filled with 37B7C3
+                    backgroundColor: const Color(0xFF00B4D8),
+                    // Button filled with 37B7C3
                     padding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 60.0),
                     shape: RoundedRectangleBorder(
@@ -75,10 +75,10 @@ class ServHandyman extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const HandymanRegistrationPage()),
+                          builder: (context) =>
+                              const HandymanRegistrationPage()),
                     );
                   },
-                  
                   child: const Text(
                     'Handyman',
                     style: TextStyle(

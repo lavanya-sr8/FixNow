@@ -14,7 +14,7 @@ class UserProfile extends StatelessWidget {
           'FixNow!',
           style: TextStyle(
             fontWeight: FontWeight.w300,
-            color: Color.fromARGB(255, 1, 1, 1),
+            color: Color(0xFFEBF4F6),
             fontSize: 50.0,
           ),
         ),
@@ -157,7 +157,7 @@ class UserProfile extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF37B7C3),
+                     backgroundColor: const Color(0xFF00B4D8),
                       padding: const EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 70.0),
                       shape: RoundedRectangleBorder(

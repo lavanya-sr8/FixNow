@@ -95,8 +95,11 @@ class _SchedulePageState extends State<SchedulePage> {
                   ));
                 }
               },
-              child: Text('Book Now'),
+              child: Text('Book Now',
+              style: TextStyle(color: Colors.white),),
               style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00B4D8),
+
                 minimumSize: Size(double.infinity, 50),
               ),
             ),
