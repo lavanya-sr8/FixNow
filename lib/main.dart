@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:FixNow/sign_up.dart';
 import 'package:FixNow/user_profile.dart';
 
-
 // import 'header.dart';
 //import 'package:rename/rename.dart';
 
@@ -33,67 +32,9 @@ void main() => runApp(const FixNowApp());
 //     );
 //   }
 // }
-class WelcomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xff73a3f6),
-              Color(0xff0a5578),
-            ],
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Insert the image here
-            Image.asset('assets/images/fixnow_light.png'), // Replace 'fixnow_logo.png' with your actual image name
-            SizedBox(height: 20),
-            // Welcome message
-            Text(
-              'Welcome to FixNow!',
-              style: TextStyle(
-                color: Color(0xff1d0505),
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            SizedBox(height: 60),
-            // Log In button
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FixNowApp()),
-                        );
-
-                // Navigate to Log In page
-              },
-              child: Text(
-                'Log In',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class FixNowApp extends StatelessWidget {
   const FixNowApp({super.key});
-  
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +77,6 @@ class FixNowApp extends StatelessWidget {
     });
   }
 }
-
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -277,14 +217,14 @@ class LoginFormState extends State<LoginForm> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>   UserProfile()),
+                                  builder: (context) => UserProfile()),
                             );
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(buttonWidth,
                               50), // Full-width button within the form width
-                         backgroundColor: const Color(0xFF00B4D8),
+                          backgroundColor: const Color(0xFF00B4D8),
 
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,

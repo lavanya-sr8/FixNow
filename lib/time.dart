@@ -77,9 +77,9 @@ class _SchedulePageState extends State<SchedulePage> {
                   showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: Text('Booking Confirmed'),
+                      title: Text('Request Submitted'),
                       content: Text(
-                        'Your booking for ${selectedDate?.toString().split(' ')[0]} has been confirmed.',
+                        'Your booking for ${selectedDate?.toString().split(' ')[0]} has been submitted to the handyman.',
                       ),
                       actions: <Widget>[
                         TextButton(
