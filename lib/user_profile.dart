@@ -1,10 +1,11 @@
 import 'package:FixNow/ser_handyman.dart';
 import 'package:flutter/material.dart';
 
+
 // ignore: must_be_immutable
 class UserProfile extends StatelessWidget {
-   const UserProfile({super.key});
-   
+  const UserProfile({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +84,7 @@ class UserProfile extends StatelessWidget {
                     width: formWidth,
                     child: TextField(
                       keyboardType: TextInputType.emailAddress,
+                      
                       decoration: InputDecoration(
                         labelText: 'Enter your email ID',
                         labelStyle: TextStyle(color: Colors.grey),
