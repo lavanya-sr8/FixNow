@@ -1,3 +1,4 @@
+import 'package:FixNow/time.dart';
 import 'package:flutter/material.dart';
 
 class Service {
@@ -243,6 +244,11 @@ class HandymanCard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SchedulePage ()),
+                    );
                 // Implement booking logic or navigate to booking page
                
               },
