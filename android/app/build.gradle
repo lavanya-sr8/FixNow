@@ -23,6 +23,10 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+apply Plugin: 'com.android.application'
+apply Plugin: 'com.google.gms.google-services'
+
+
 android {
     namespace = "com.example.FixNow"
     compileSdk = flutter.compileSdkVersion
@@ -38,7 +42,7 @@ android {
         applicationId = "com.example.FixNow"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
+        minSdkVersion 22
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
@@ -55,4 +59,8 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies{
+    implementation platform('com.google.firebase:firebase-bom:33.3.0')
+    implementation 'com.google.firebase:firebase-analytics'
 }

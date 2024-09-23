@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "427430390646",
+    "project_id": "fixnow-13232",
+    "storage_bucket": "fixnow-13232.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427430390646:android:95991bdfa1e66c7e7be857",
+        "android_client_info": {
+          "package_name": "com.example.FixNow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC4EN1Kj1Z2vBFhjfTNLYnG-7r9Ycc5qA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
