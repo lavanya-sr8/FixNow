@@ -1,4 +1,4 @@
-import 'package:FixNow/verify.dart';
+import 'package:FixNow/handyman_bookings.dart';
 import 'package:flutter/material.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -70,7 +70,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Verify()),
+                          builder: (context) => const Notifications()),
                     );
                 if (selectedDate != null) {
                   print('Booking confirmed for $selectedDate');

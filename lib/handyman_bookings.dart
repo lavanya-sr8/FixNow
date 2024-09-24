@@ -1,3 +1,5 @@
+import 'package:FixNow/reject.dart';
+import 'package:FixNow/success.dart';
 import 'package:flutter/material.dart';
 
 class Notifications extends StatelessWidget {
@@ -65,6 +67,11 @@ class BookingSet extends State<Bookings> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
+                            Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Success()),
+                        );
                             // confirm(context,'Would you like to confirm the acceptance of the request?', ConfirmationPage());
                           },
                           style: ElevatedButton.styleFrom(
@@ -84,6 +91,12 @@ class BookingSet extends State<Bookings> {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                             Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Reject()),
+                        );
+
                             // confirm(context,'Would you like to reject the request?', RejectionPage());
                           },
                           style: ElevatedButton.styleFrom(
