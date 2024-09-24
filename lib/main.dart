@@ -1,8 +1,9 @@
 import 'package:FixNow/firebase_options.dart';
+import 'package:FixNow/ser_handyman.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'handyman_bookings.dart';
+
 import 'sign_up.dart';
 // import 'header.dart';
 import 'package:rename/rename.dart';
@@ -221,7 +222,7 @@ class LoginFormState extends State<LoginForm> {
       // On success, navigate to the next page (e.g., bookings or dashboard)
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Notifications()),
+        MaterialPageRoute(builder: (context) => const ServHandyman()),
       );
     } catch (e) {
       // Handle errors (e.g., wrong credentials or user not found)
