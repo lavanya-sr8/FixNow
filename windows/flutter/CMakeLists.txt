@@ -107,3 +107,5 @@ add_custom_target(flutter_assemble DEPENDS
   ${CPP_WRAPPER_SOURCES_PLUGIN}
   ${CPP_WRAPPER_SOURCES_APP}
 )
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/build/windows/x64/extracted/firebase_cpp_sdk_windows)
