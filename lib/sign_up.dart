@@ -1,4 +1,4 @@
-import 'package:FixNow/main.dart';
+import 'package:FixNow/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -270,7 +270,7 @@ class SignUpFormState extends State<SignUpForm> {
     // Navigate to the home page or login page after sign-up
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const FixNowApp()),
+      MaterialPageRoute(builder: (context) =>  UserProfile()),
     );
   } catch (e) {
     // Handle sign-up errors
