@@ -251,32 +251,23 @@ class HandymanCard extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SchedulePage()),
-                );
-
-                // Save booking details to Firestore after the user confirms
-                await FirebaseFirestore.instance.collection('bookings').add({
-                  'handymanName': handyman.name,
-                  'service': selectedService,
-                  'rating': handyman.rating,
-                  'experience': handyman.experience,
-                  'imageUrl': handyman.imageUrl,
-                  'bookedAt': DateTime.now(),
-                });
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Booking confirmed!')),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00B4D8),
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Book Now'),
-            ),
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SchedulePage(
+                          handyman: handyman,
+                          selectedService: selectedService,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00B4D8),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Book Now'),
+                ),
           ],
         ),
       ),
