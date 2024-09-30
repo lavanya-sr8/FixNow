@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'sign_up.dart';
 // import 'header.dart';
-import 'package:rename/rename.dart';
+//import 'package:rename/rename.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
