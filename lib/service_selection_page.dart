@@ -1,5 +1,6 @@
-import 'package:FixNow/time.dart';
+import 'package:FixNow/time.dart'; // Ensure that SchedulePage or time.dart contains the correct implementation.
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import for Firebase interaction.
 
 class Service {
   final IconData icon;
@@ -124,7 +125,6 @@ class ServiceCard extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF00B4D8),
-
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('Select'),
@@ -176,7 +176,6 @@ class _HandymanListPageState extends State<HandymanListPage> {
       imageUrl: 'assets/handyman4.jpg',
       services: ['Electrical', 'Carpentry', 'Plumbing'],
     ),
-    // Add more handymen as needed
   ];
 
   @override
@@ -193,7 +192,7 @@ class _HandymanListPageState extends State<HandymanListPage> {
         itemCount: filteredHandymen.length,
         itemBuilder: (context, index) {
           final handyman = filteredHandymen[index];
-          return HandymanCard(handyman: handyman);
+          return HandymanCard(handyman: handyman, selectedService: widget.selectedService);
         },
       ),
     );
@@ -202,8 +201,9 @@ class _HandymanListPageState extends State<HandymanListPage> {
 
 class HandymanCard extends StatelessWidget {
   final Handyman handyman;
+  final String selectedService;
 
-  const HandymanCard({super.key, required this.handyman});
+  const HandymanCard({super.key, required this.handyman, required this.selectedService});
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +214,7 @@ class HandymanCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(handyman.imageUrl),
+              backgroundImage: AssetImage(handyman.imageUrl), // Fix from NetworkImage to AssetImage if using local assets
             ),
             const SizedBox(width: 16.0),
             Expanded(
@@ -251,17 +251,29 @@ class HandymanCard extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SchedulePage()),
                 );
-                // Implement booking logic or navigate to booking page
+
+                // Save booking details to Firestore after the user confirms
+                await FirebaseFirestore.instance.collection('bookings').add({
+                  'handymanName': handyman.name,
+                  'service': selectedService,
+                  'rating': handyman.rating,
+                  'experience': handyman.experience,
+                  'imageUrl': handyman.imageUrl,
+                  'bookedAt': DateTime.now(),
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Booking confirmed!')),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF00B4D8),
-                // Set the button color to blue
-                foregroundColor: Colors.white, // Set the text color to white
+                foregroundColor: Colors.white,
               ),
               child: const Text('Book Now'),
             ),
