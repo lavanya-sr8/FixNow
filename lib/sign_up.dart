@@ -264,7 +264,8 @@ class SignUpFormState extends State<SignUpForm> {
     await FirebaseFirestore.instance.collection('Users').doc(uid).set({
       'username': username.trim(),
       'email': email.trim(),
-      'uid': uid
+      'uid': uid,
+      'isHandyman': false
     });
 
     // Navigate to the home page or login page after sign-up

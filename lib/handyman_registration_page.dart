@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import
+import 'package:multi_select_flutter/multi_select_flutter.dart'; // Multi-select import
 
 class HandymanRegistrationPage extends StatefulWidget {
   const HandymanRegistrationPage({super.key});
@@ -14,35 +16,106 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _qualificationController = TextEditingController();
+  
+  List<String> _selectedServices = [];
+
+  final List<String> _services = [
+    "Plumbing",
+    "Electrical",
+    "Carpentry",
+    "Painting",
+    "Cleaning",
+  ];
+
   // Function to handle Firestore data submission
+  // Future<void> _registerHandyman() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     // Firestore collection reference
+  //     CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
+
+  //     // Add data to Firestore
+  //     await handymanProfile.add({
+  //       'name': _nameController.text,
+  //       'address': _addressController.text,
+  //       'qualification': _qualificationController.text,
+  //       'services': _selectedServices,  // Add selected services
+  //     });
+
+  //     // Show success message or navigate to another page
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Handyman registered successfully!')),
+  //     );
+
+  //     // Clear the form fields after successful registration
+  //     _nameController.clear();
+  //     _addressController.clear();
+  //     _qualificationController.clear();
+  //     setState(() {
+  //       _selectedServices = [];
+  //     });
+  //   }
+  // }
+
   Future<void> _registerHandyman() async {
-    if (_formKey.currentState!.validate()) {
-      // Firestore collection reference
-      CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
+  if (_formKey.currentState!.validate()) {
+    // Get the current user's UID
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String uid = user.uid;
 
-      // Add data to Firestore
-      await handymanProfile.add({
-        'name': _nameController.text,
-        'address': _addressController.text,
-        'qualification': _qualificationController.text,
-      });
+      // Get the user's profile from Firestore
+      DocumentSnapshot userProfile = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
 
-      // Show success message or navigate to another page
+      // Check if the user is already a handyman
+      if (userProfile.exists && userProfile['isHandyman'] == true) {
+        // Show an error message if the user is already registered as a handyman
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('You are already registered as a handyman!')),
+        );
+      } else {
+        // Proceed with handyman registration
+        CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
+
+        await handymanProfile.add({
+          'name': _nameController.text,
+          'address': _addressController.text,
+          'qualification': _qualificationController.text,
+          'services': _selectedServices,
+          'uid': uid, // Link handyman profile with user
+        });
+
+        // Update the 'isHandyman' field in the user profile
+        await FirebaseFirestore.instance.collection('Users').doc(uid).update({
+          'isHandyman': true,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Handyman registered successfully!')),
+        );
+
+        // Clear the form fields after successful registration
+        _nameController.clear();
+        _addressController.clear();
+        _qualificationController.clear();
+        setState(() {
+          _selectedServices = [];
+        });
+      }
+    } else {
+      // Show an error if the user is not logged in
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Handyman registered successfully!')),
+        const SnackBar(content: Text('Please log in to register as a handyman.')),
       );
-
-      // Clear the form fields after successful registration
-      _nameController.clear();
-      _addressController.clear();
-      _qualificationController.clear();
     }
   }
-   @override
+}
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title: const Text('Handyman Registration'),
       ),
       body: Padding(
         padding: EdgeInsets.zero,
@@ -61,32 +134,29 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
               ],
             ),
             padding: const EdgeInsets.all(20.0),
-            child: Form( // Wrap fields in a Form widget for validation
+            child: Form( 
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildHeader(),
                   const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0.0),
-                    child: TextFormField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Name',
-                        hintText: 'Enter your name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Enter your name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                      style: const TextStyle(color: Colors.black),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 16.0),
                   TextFormField(
@@ -124,9 +194,41 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                     },
                     style: const TextStyle(color: Colors.black),
                   ),
+                  const SizedBox(height: 16.0),
+                  
+                  // Multi-Select Dropdown
+                  MultiSelectDialogField(
+                    items: _services.map((e) => MultiSelectItem(e, e)).toList(),
+                    title: const Text("Select Services"),
+                    selectedColor: Colors.blue,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                    ),
+                    buttonIcon: const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.blue,
+                    ),
+                    buttonText: const Text(
+                      "Select Services",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onConfirm: (results) {
+                      setState(() {
+                        _selectedServices = results.cast<String>();
+                      });
+                    },
+                  ),
                   const SizedBox(height: 24.0),
                   ElevatedButton(
-                    onPressed: _registerHandyman, // Call the Firestore save function
+                    onPressed: _registerHandyman,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 30, 209, 226),
                       foregroundColor: Colors.white,
@@ -160,9 +262,8 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
         ),
      ),
 );
+  }
 }
-}
-
 
 
 

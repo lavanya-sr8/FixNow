@@ -23,7 +23,7 @@ class Handyman {
     required this.rating,
     required this.imageUrl,
     required this.services,
-  });
+  });  
 }
 
 class ServiceSelectionPage extends StatelessWidget {
