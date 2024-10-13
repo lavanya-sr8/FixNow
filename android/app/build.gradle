@@ -64,10 +64,12 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 
 
-// dependencies{
+dependencies{
+    implementation 'com.google.firebase:firebase-messaging:^15.1.2'
+
 
 //     implementation platform('com.google.firebase:firebase-bom:33.3.0')
 
 //     implementation 'com.google.firebase:firebase-analytics'
 
-// }
+}

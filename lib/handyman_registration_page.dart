@@ -1,5 +1,9 @@
+import 'package:FixNow/handyman_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import
+import 'package:firebase_messaging/firebase_messaging.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';// FCM import
+
 
 class HandymanRegistrationPage extends StatefulWidget {
   const HandymanRegistrationPage({super.key});
@@ -14,18 +18,50 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _qualificationController = TextEditingController();
+  final _experienceController = TextEditingController(); // New experience controller
+  final _servicesController = TextEditingController(); // New services controller
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  String? _fcmToken; // Variable to store the FCM token
+
+  @override
+  void initState() {
+    super.initState();
+    _getFCMToken(); // Retrieve the FCM token when the widget is initialized
+  }
+
+  // Function to get FCM token
+  Future<void> _getFCMToken() async {
+    _fcmToken = await _firebaseMessaging.getToken();
+    print("FCM Token: $_fcmToken"); // Log the token (optional)
+  }
+  
   // Function to handle Firestore data submission
   Future<void> _registerHandyman() async {
+    
     if (_formKey.currentState!.validate()) {
       // Firestore collection reference
       CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
 
-      // Add data to Firestore
-      await handymanProfile.add({
+      // Add data to Firestore and get the document reference
+      DocumentReference handymanDocRef = await handymanProfile.add({
         'name': _nameController.text,
         'address': _addressController.text,
         'qualification': _qualificationController.text,
+        'experience': _experienceController.text, // Save experience field
+        'services':_servicesController.text.split(',').map((s) => s.trim()).toList(), // Save services as an array
+        'fcmToken': _fcmToken, // Include the FCM token here
       });
+
+      // Now save the FCM token
+      if (_fcmToken != null) {
+        await handymanDocRef.update({
+          'fcmToken': _fcmToken, // Include the FCM token here
+        });
+      }
+
+      // Store registration status in SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isHandymanRegistered', true);
 
       // Show success message or navigate to another page
       ScaffoldMessenger.of(context).showSnackBar(
@@ -36,6 +72,15 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
       _nameController.clear();
       _addressController.clear();
       _qualificationController.clear();
+      _experienceController.clear();
+      _servicesController.clear();
+
+
+      // Navigate to Handyman Dashboard after successful registration
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HandymanDashboard()), // Replace with your HandymanDashboard page
+    );
     }
   }
    @override
@@ -119,6 +164,42 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter your qualification';
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: _experienceController, // New Experience field
+                    decoration: const InputDecoration(
+                      labelText: 'Experience',
+                      hintText: 'Enter your experience in years',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your experience';
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: _servicesController,
+                    decoration: const InputDecoration(
+                      labelText: 'Services',
+                      hintText: 'Enter services offered (comma separated)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter the services you provide';
                       }
                       return null;
                     },

@@ -1,27 +1,17 @@
-import 'package:FixNow/time.dart';
+import 'package:FixNow/time.dart'; // Ensure that SchedulePage or time.dart contains the correct implementation.
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Firebase Auth import
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import
 
 class Service {
   final IconData icon;
   final String title;
   final String description;
 
-  Service({required this.icon, required this.title, required this.description});
-}
-
-class Handyman {
-  final String name;
-  final String experience;
-  final double rating;
-  final String imageUrl;
-  final List<String> services;
-
-  const Handyman({
-    required this.name,
-    required this.experience,
-    required this.rating,
-    required this.imageUrl,
-    required this.services,
+  Service({
+    required this.icon,
+    required this.title,
+    required this.description,
   });
 }
 
@@ -30,6 +20,9 @@ class ServiceSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final clientId = currentUser?.uid;
+
     final services = [
       Service(
         icon: Icons.plumbing,
@@ -69,6 +62,7 @@ class ServiceSelectionPage extends StatelessWidget {
             icon: service.icon,
             title: service.title,
             description: service.description,
+            clientId: clientId!,
           );
         },
       ),
@@ -80,13 +74,15 @@ class ServiceCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
+  final String clientId;
 
   const ServiceCard({
-    super.key,
+    Key? key,
     required this.icon,
     required this.title,
     required this.description,
-  });
+    required this.clientId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,18 +109,19 @@ class ServiceCard extends StatelessWidget {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  // Navigate to handyman listing page
+                  // Navigate to handyman listing page with service and clientId
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          HandymanListPage(selectedService: title),
+                      builder: (context) => HandymanListPage(
+                        selectedService: title,
+                        clientId: clientId,
+                      ),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF00B4D8),
-
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('Select'),
@@ -137,63 +134,109 @@ class ServiceCard extends StatelessWidget {
   }
 }
 
+class Handyman {
+  final String handymanId;
+  final String name;
+  final String imageUrl;
+  final int experience;
+  final List<String> services;
+
+  Handyman({
+    required this.handymanId,
+    required this.name,
+    required this.imageUrl,
+    required this.experience,
+    required this.services,
+  });
+
+  factory Handyman.fromMap(Map<String, dynamic> data) {
+    return Handyman(
+      handymanId: data['handymanId'] ?? '',
+      name: data['name'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      experience:int.tryParse(data['experience'].toString()) ?? 0,  // Convert to int safely
+      services: data['services'] != null && data['services'] is List 
+      ? List<String>.from(data['services']) 
+      : [],  // Default to an empty list if services is null or not a list
+    );
+  }
+
+  @override
+  String toString() {
+    return '$name';
+  }
+}
+
+
 class HandymanListPage extends StatefulWidget {
   final String selectedService;
+  final String clientId;
 
-  const HandymanListPage({super.key, required this.selectedService});
+  const HandymanListPage({
+    Key? key,
+    required this.selectedService,
+    required this.clientId,
+  }) : super(key: key);
 
   @override
   State<HandymanListPage> createState() => _HandymanListPageState();
 }
 
 class _HandymanListPageState extends State<HandymanListPage> {
-  final List<Handyman> handymen = [
-    Handyman(
-      name: 'John Smith',
-      experience: '5 years',
-      rating: 4.8,
-      imageUrl: 'assets/handyman1.jpg',
-      services: ['Plumbing', 'Electrical', 'Painting'],
-    ),
-    Handyman(
-      name: 'Jane Doe',
-      experience: '3 years',
-      rating: 4.5,
-      imageUrl: 'assets/handyman2.jpg',
-      services: ['Carpentry', 'Painting', 'Plumbing', 'Electrical'],
-    ),
-    Handyman(
-      name: 'Person 3',
-      experience: '2 years',
-      rating: 4.2,
-      imageUrl: 'assets/handyman3.jpg',
-      services: ['Plumbing', 'Painting', 'Electrical'],
-    ),
-    Handyman(
-      name: 'Person 4',
-      experience: '4 years',
-      rating: 4.7,
-      imageUrl: 'assets/handyman4.jpg',
-      services: ['Electrical', 'Carpentry', 'Plumbing'],
-    ),
-    // Add more handymen as needed
-  ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<List<Map<String, dynamic>>> fetchHandymen() async {
+    // Query Firestore to get handymen who offer the selected service
+    QuerySnapshot snapshot = await _firestore
+        .collection('handy_profile')
+        .where('services', arrayContains: widget.selectedService)
+        .get();
+
+        // Add this debug print
+  print('Handymen fetched: ${snapshot.docs.length}');
+  
+
+    return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final filteredHandymen = handymen
-        .where((handyman) => handyman.services.contains(widget.selectedService))
-        .toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Available Handymen for ${widget.selectedService}'),
       ),
-      body: ListView.builder(
-        itemCount: filteredHandymen.length,
-        itemBuilder: (context, index) {
-          final handyman = filteredHandymen[index];
-          return HandymanCard(handyman: handyman);
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: fetchHandymen(),
+        
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error fetching handymen.'));
+          }
+
+          final handymen = snapshot.data;
+
+           // Add this debug print to check the fetched handymen data
+          print('Handymen data: $handymen');
+
+          if (handymen == null || handymen.isEmpty) {
+            return const Center(child: Text('No handymen available.'));
+          }
+
+          return ListView.builder(
+            itemCount: handymen.length,
+            itemBuilder: (context, index) {
+              final handyman = handymen[index];
+              return HandymanCard(
+                handyman: handyman,
+                selectedService: widget.selectedService,
+                clientId: widget.clientId,
+              );
+            },
+          );
         },
       ),
     );
@@ -201,12 +244,22 @@ class _HandymanListPageState extends State<HandymanListPage> {
 }
 
 class HandymanCard extends StatelessWidget {
-  final Handyman handyman;
+  final Map<String, dynamic> handyman;
+  final String selectedService;
+  final String clientId;
 
-  const HandymanCard({super.key, required this.handyman});
+  const HandymanCard({
+    Key? key,
+    required this.handyman,
+    required this.selectedService,
+    required this.clientId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+     // Convert the map to a Handyman object
+    final handymanObject = Handyman.fromMap(handyman);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Padding(
@@ -214,7 +267,7 @@ class HandymanCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(handyman.imageUrl),
+              backgroundImage: NetworkImage(handymanObject.imageUrl),
             ),
             const SizedBox(width: 16.0),
             Expanded(
@@ -222,21 +275,18 @@ class HandymanCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    handyman.name,
+                    handymanObject.name,
                     style: const TextStyle(
                         fontSize: 16.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4.0),
                   Row(
                     children: [
-                      const Icon(Icons.star, color: Colors.amber),
-                      Text(
-                        handyman.rating.toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 12.0),
-                      ),
+                    
+                      
                       const SizedBox(width: 8.0),
                       Text(
-                        '(${handyman.experience} years exp.)',
+                        '(${handymanObject.experience} years exp.)',
                         style:
                             const TextStyle(fontSize: 12.0, color: Colors.grey),
                       ),
@@ -244,7 +294,7 @@ class HandymanCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    'Services: ${handyman.services.join(', ')}',
+                    'Services: ${handymanObject.services.join(', ')}',
                     style: const TextStyle(fontSize: 12.0),
                   ),
                 ],
@@ -254,14 +304,20 @@ class HandymanCard extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SchedulePage()),
+                  MaterialPageRoute(
+                    builder: (context) => SchedulePage(
+                      handymanId: handymanObject.handymanId,
+                      handymanName: handymanObject.name,
+                      handymanExperience:handymanObject.experience,
+                      selectedService: selectedService,
+                      clientId: clientId,
+                    ),
+                  ),
                 );
-                // Implement booking logic or navigate to booking page
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF00B4D8),
-                // Set the button color to blue
-                foregroundColor: Colors.white, // Set the text color to white
+                foregroundColor: Colors.white,
               ),
               child: const Text('Book Now'),
             ),

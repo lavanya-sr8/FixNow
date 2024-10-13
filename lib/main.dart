@@ -1,63 +1,87 @@
 import 'package:FixNow/firebase_options.dart';
-import 'package:FixNow/ser_handyman.dart';
+import 'package:FixNow/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 import 'sign_up.dart';
+
 // import 'header.dart';
 //import 'package:rename/rename.dart';
+// Initialize flutter_local_notifications plugin
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+// Initialization settings for Android and iOS
+const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+final InitializationSettings initializationSettings = InitializationSettings(
+  android: initializationSettingsAndroid,
+);
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message: ${message.messageId}');
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Initialize local notifications
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   runApp(const FixNowApp());
 }
+
 
 class FixNowApp extends StatelessWidget {
   const FixNowApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double toolbarHeight = constraints.maxHeight * 0.1;
-        double appBarFontSize = toolbarHeight*0.5;
-        double iconSize = appBarFontSize*1.5;
-        return MaterialApp(
-      title: 'FixNow: Find, Hire, Fix!',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: toolbarHeight,
-          title: 
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Image.asset('assets/fixnow_dark.png', fit: BoxFit.cover, height: iconSize, width: iconSize),
-            Text(
-            'FixNow!',
-            style: TextStyle(
-              fontWeight: FontWeight.w300,
-              color: Colors.white,
-              fontSize: appBarFontSize
-            ),
-          ) 
-          ],), 
-          backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
-
+    return LayoutBuilder(builder: (context, constraints) {
+      double toolbarHeight = constraints.maxHeight * 0.1;
+      double appBarFontSize = toolbarHeight * 0.5;
+      double iconSize = appBarFontSize * 1.5;
+      return MaterialApp(
+        title: 'FixNow: Find, Hire, Fix!',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-        body: const Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[LoginForm()],
-        )),
-      ),
-    );
-      }
+        home: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: toolbarHeight,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/fixnow_dark.png',
+                    fit: BoxFit.cover, height: iconSize, width: iconSize),
+                Text(
+                  'FixNow!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white,
+                      fontSize: appBarFontSize),
+                )
+              ],
+            ),
+            backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
+          ),
+          body: const Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const <Widget>[LoginForm()],
+          )),
+        ),
       );
-    
+    });
   }
 }
 
@@ -97,7 +121,8 @@ class LoginFormState extends State<LoginForm> {
 
         return Container(
           color: const Color.fromRGBO(240, 221, 169, 0.004),
-          padding: EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
+          padding:
+              EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
           child: Center(
             child: SizedBox(
               width: formWidth,
@@ -111,7 +136,8 @@ class LoginFormState extends State<LoginForm> {
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -120,31 +146,40 @@ class LoginFormState extends State<LoginForm> {
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(
+                        height:
+                            constraints.maxWidth * 0.05), // Responsive spacing
                     TextFormField(
-                      controller: _passwordController, // Password controller added
-                      obscureText: !_isPasswordVisible, // Password visibility toggle added
+                      controller:
+                          _passwordController, // Password controller added
+                      obscureText:
+                          !_isPasswordVisible, // Password visibility toggle added
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter password',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            _isPasswordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: Colors.black,
                           ),
                           onPressed: () {
                             setState(() {
-                              _isPasswordVisible = !_isPasswordVisible; // Toggle password visibility
+                              _isPasswordVisible =
+                                  !_isPasswordVisible; // Toggle password visibility
                             });
                           },
                         ),
@@ -159,14 +194,19 @@ class LoginFormState extends State<LoginForm> {
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(
+                        height:
+                            constraints.maxWidth * 0.05), // Responsive spacing
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         const Text("Don't have an account?"),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpPage()));
                           },
                           child: const Text(
                             'Sign up',
@@ -183,12 +223,14 @@ class LoginFormState extends State<LoginForm> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await signIn(_emailController.text.trim(),
-                              _passwordController.text.trim(), context);
+                                _passwordController.text.trim(), context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(buttonWidth, 50), // Full-width button within the form width
-                          backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
+                          minimumSize: Size(buttonWidth,
+                              50), // Full-width button within the form width
+                          backgroundColor:
+                              const Color.fromRGBO(226, 241, 255, 0.643),
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -213,21 +255,21 @@ class LoginFormState extends State<LoginForm> {
   }
 }
 
- Future<void> signIn(String email, String password, BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      // On success, navigate to the next page (e.g., bookings or dashboard)
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ServHandyman()),
-      );
-    } catch (e) {
-      // Handle errors (e.g., wrong credentials or user not found)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to login: ${e.toString()}')),
-      );
-    }
+Future<void> signIn(String email, String password, BuildContext context) async {
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    // On success, navigate to the next page (e.g., bookings or dashboard)
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage(userId: '',)),
+    );
+  } catch (e) {
+    // Handle errors (e.g., wrong credentials or user not found)
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to login: ${e.toString()}')),
+    );
   }
+}

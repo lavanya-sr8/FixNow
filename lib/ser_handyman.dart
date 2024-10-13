@@ -1,9 +1,31 @@
 import 'package:FixNow/handyman_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:FixNow/service_selection_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'handyman_dashboard.dart'; // Import the handyman dashboard page
 
 class ServHandyman extends StatelessWidget {
   const ServHandyman({super.key});
+
+  // Function to check if handyman is registered and navigate accordingly
+  Future<void> _navigateToHandymanPage(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isRegistered = prefs.getBool('isHandymanRegistered');
+
+    if (isRegistered == true) {
+      // Navigate to Handyman Dashboard if registered
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HandymanDashboard()),
+      );
+    } else {
+      // Navigate to Handyman Registration if not registered
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HandymanRegistrationPage()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +93,8 @@ class ServHandyman extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Navigate to ServHandyman page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const HandymanRegistrationPage()),
-                    );
+                   // Check registration status and navigate
+                    _navigateToHandymanPage(context);
                   },
                   child: const Text(
                     'Handyman',
