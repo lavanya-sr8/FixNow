@@ -64,7 +64,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
       String uid = user.uid;
 
       // Get the user's profile from Firestore
-      DocumentSnapshot userProfile = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+      DocumentSnapshot userProfile = await FirebaseFirestore.instance.collection('user_profile').doc(uid).get();
 
       // Check if the user is already a handyman
       if (userProfile.exists && userProfile['isHandyman'] == true) {
@@ -79,13 +79,12 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
         await handymanProfile.add({
           'name': _nameController.text,
           'address': _addressController.text,
-          'qualification': _qualificationController.text,
           'services': _selectedServices,
           'uid': uid, // Link handyman profile with user
         });
 
         // Update the 'isHandyman' field in the user profile
-        await FirebaseFirestore.instance.collection('Users').doc(uid).update({
+        await FirebaseFirestore.instance.collection('user_profile').doc(uid).update({
           'isHandyman': true,
         });
 
@@ -176,30 +175,11 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                     },
                     style: const TextStyle(color: Colors.black),
                   ),
-                   const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _qualificationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Qualification',
-                      hintText: 'Enter your qualification',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your qualification';
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 16.0),
-                  
+                  const SizedBox(height: 20),
                   // Multi-Select Dropdown
                   MultiSelectDialogField(
                     items: _services.map((e) => MultiSelectItem(e, e)).toList(),
-                    title: const Text("Select Services"),
+                    title: const Text("Qualifications"),
                     selectedColor: Colors.blue,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],

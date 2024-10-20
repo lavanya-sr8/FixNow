@@ -261,7 +261,7 @@ class SignUpFormState extends State<SignUpForm> {
     String uid = userCredential.user!.uid;
 
     // Store username in Firestore
-    await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+    await FirebaseFirestore.instance.collection('user_profile').doc(uid).set({
       'username': username.trim(),
       'email': email.trim(),
       'uid': uid,

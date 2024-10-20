@@ -12,7 +12,7 @@ class ServHandyman extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       String uid = user.uid;
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('user_profile').doc(uid).get();
       
       // Check if the 'isHandyman' field exists and is true
       if (userDoc.exists && userDoc['isHandyman'] == true) {
