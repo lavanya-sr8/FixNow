@@ -149,9 +149,10 @@ class Handyman {
     required this.services,
   });
 
-  factory Handyman.fromMap(Map<String, dynamic> data) {
+  factory Handyman.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Handyman(
-      handymanId: data['handymanId'] ?? '',
+      handymanId: doc.id,
       name: data['name'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
       experience:int.tryParse(data['experience'].toString()) ?? 0,  // Convert to int safely
@@ -185,7 +186,7 @@ class HandymanListPage extends StatefulWidget {
 class _HandymanListPageState extends State<HandymanListPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> fetchHandymen() async {
+  Future<List<Handyman>> fetchHandymen() async {
     // Query Firestore to get handymen who offer the selected service
     QuerySnapshot snapshot = await _firestore
         .collection('handy_profile')
@@ -196,7 +197,8 @@ class _HandymanListPageState extends State<HandymanListPage> {
   print('Handymen fetched: ${snapshot.docs.length}');
   
 
-    return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    // Map each document to Handyman using the fromFirestore factory constructor
+  return snapshot.docs.map((doc) => Handyman.fromFirestore(doc)).toList();
   }
 
   @override
@@ -205,7 +207,7 @@ class _HandymanListPageState extends State<HandymanListPage> {
       appBar: AppBar(
         title: Text('Available Handymen for ${widget.selectedService}'),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
+      body: FutureBuilder<List<Handyman>>( // Change here
         future: fetchHandymen(),
         
         builder: (context, snapshot) {
@@ -231,7 +233,7 @@ class _HandymanListPageState extends State<HandymanListPage> {
             itemBuilder: (context, index) {
               final handyman = handymen[index];
               return HandymanCard(
-                handyman: handyman,
+                handymanObject: handyman,
                 selectedService: widget.selectedService,
                 clientId: widget.clientId,
               );
@@ -244,13 +246,13 @@ class _HandymanListPageState extends State<HandymanListPage> {
 }
 
 class HandymanCard extends StatelessWidget {
-  final Map<String, dynamic> handyman;
+  final Handyman handymanObject;
   final String selectedService;
   final String clientId;
 
   const HandymanCard({
     Key? key,
-    required this.handyman,
+    required this.handymanObject,
     required this.selectedService,
     required this.clientId,
   }) : super(key: key);
@@ -259,7 +261,7 @@ class HandymanCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
      // Convert the map to a Handyman object
-    final handymanObject = Handyman.fromMap(handyman);
+    
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Padding(
@@ -302,6 +304,7 @@ class HandymanCard extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                print('Handyman ID: ${handymanObject.handymanId}');
                 Navigator.push(
                   context,
                   MaterialPageRoute(

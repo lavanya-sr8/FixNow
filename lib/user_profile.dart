@@ -1,7 +1,9 @@
 import 'package:FixNow/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// Import your HomePage file
+
+// Global variable to store the userId
+String? globalUserId;
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -20,7 +22,8 @@ class _UserProfileState extends State<UserProfile> {
 
   // Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-   @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -51,7 +54,7 @@ class _UserProfileState extends State<UserProfile> {
                     decoration: const InputDecoration(
                       labelText: 'Enter your name',
                       labelStyle: TextStyle(color: Colors.grey),
-                       focusedBorder: OutlineInputBorder(
+                      focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFF37B7C3),
                         ),
@@ -70,7 +73,8 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                 // Input for phone number
+
+                // Input for phone number
                 SizedBox(
                   width: 300,
                   child: TextFormField(
@@ -96,7 +100,7 @@ class _UserProfileState extends State<UserProfile> {
                         return 'Please enter a valid 10-digit phone number';
                       }
                       return null;
-                        },
+                    },
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -127,7 +131,7 @@ class _UserProfileState extends State<UserProfile> {
                         return 'Please enter a valid email';
                       }
                       return null;
-                       },
+                    },
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -165,7 +169,8 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                 // Input for address
+
+                // Input for address
                 SizedBox(
                   width: 300,
                   child: TextFormField(
@@ -193,7 +198,8 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                 // SAVE button
+
+                // SAVE button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF37B7C3),
@@ -213,7 +219,11 @@ class _UserProfileState extends State<UserProfile> {
                         'aadhar_no': aadhaarController.text,
                         'address': addressController.text,
                       });
-                       // Navigate to HomePage and pass the userId (doc ID)
+
+                      // Store userId in global variable
+                      globalUserId = docRef.id;
+
+                      // Navigate to HomePage without passing userId
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -234,15 +244,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
           ),
         ),
-     ),
-);
+      ),
+    );
+  }
 }
-}
-
-
-
-
-
-
-
-

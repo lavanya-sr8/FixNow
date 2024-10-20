@@ -1,5 +1,5 @@
+import 'package:FixNow/dummy.dart';
 import 'package:FixNow/firebase_options.dart';
-import 'package:FixNow/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');
 
-final InitializationSettings initializationSettings = InitializationSettings(
+const InitializationSettings initializationSettings = InitializationSettings(
   android: initializationSettingsAndroid,
 );
 
@@ -261,11 +261,14 @@ Future<void> signIn(String email, String password, BuildContext context) async {
       email: email,
       password: password,
     );
+
+    
     // On success, navigate to the next page (e.g., bookings or dashboard)
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const HomePage(userId: '',)),
-    );
+      MaterialPageRoute(
+    builder: (context) => Dummy(),
+    ));
   } catch (e) {
     // Handle errors (e.g., wrong credentials or user not found)
     ScaffoldMessenger.of(context).showSnackBar(
@@ -273,3 +276,4 @@ Future<void> signIn(String email, String password, BuildContext context) async {
     );
   }
 }
+

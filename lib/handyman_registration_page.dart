@@ -1,4 +1,5 @@
 import 'package:FixNow/handyman_dashboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import
 import 'package:firebase_messaging/firebase_messaging.dart'; 
@@ -51,6 +52,25 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
         'services':_servicesController.text.split(',').map((s) => s.trim()).toList(), // Save services as an array
         'fcmToken': _fcmToken, // Include the FCM token here
       });
+
+      // Generate handymanId from the document ID
+    String handymanId = handymanDocRef.id; 
+
+    // Update the handyman document to include the handymanId
+    await handymanDocRef.update({
+      'handymanId': handymanId, // Add handymanId to the document
+    });
+
+    // Optionally, if you want to link handymanId to the user's profile, you can do so here
+    // Assuming you have a users collection
+    String clientId = FirebaseAuth.instance.currentUser?.uid ?? '';// Get the clientId from the user's profile or login context
+
+    // Check if the clientId is valid before updating
+    if (clientId.isNotEmpty) {
+      await FirebaseFirestore.instance.collection('Users').doc(clientId).update({
+        'handymanId': handymanId, // Link handymanId to the user's profile
+      });
+    }
 
       // Now save the FCM token
       if (_fcmToken != null) {
@@ -243,8 +263,6 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
 );
 }
 }
-
-
 
 
 
