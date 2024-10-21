@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import
 import 'package:firebase_messaging/firebase_messaging.dart'; 
-import 'package:shared_preferences/shared_preferences.dart';// FCM import
-
+import 'package:shared_preferences/shared_preferences.dart'; // FCM import
 
 class HandymanRegistrationPage extends StatefulWidget {
   const HandymanRegistrationPage({super.key});
@@ -38,7 +37,6 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   
   // Function to handle Firestore data submission
   Future<void> _registerHandyman() async {
-    
     if (_formKey.currentState!.validate()) {
       // Firestore collection reference
       CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
@@ -49,28 +47,27 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
         'address': _addressController.text,
         'qualification': _qualificationController.text,
         'experience': _experienceController.text, // Save experience field
-        'services':_servicesController.text.split(',').map((s) => s.trim()).toList(), // Save services as an array
+        'services': _servicesController.text.split(',').map((s) => s.trim()).toList(), // Save services as an array
         'fcmToken': _fcmToken, // Include the FCM token here
       });
 
       // Generate handymanId from the document ID
-    String handymanId = handymanDocRef.id; 
+      String handymanId = handymanDocRef.id; 
 
-    // Update the handyman document to include the handymanId
-    await handymanDocRef.update({
-      'handymanId': handymanId, // Add handymanId to the document
-    });
-
-    // Optionally, if you want to link handymanId to the user's profile, you can do so here
-    // Assuming you have a users collection
-    String clientId = FirebaseAuth.instance.currentUser?.uid ?? '';// Get the clientId from the user's profile or login context
-
-    // Check if the clientId is valid before updating
-    if (clientId.isNotEmpty) {
-      await FirebaseFirestore.instance.collection('Users').doc(clientId).update({
-        'handymanId': handymanId, // Link handymanId to the user's profile
+      // Update the handyman document to include the handymanId
+      await handymanDocRef.update({
+        'handymanId': handymanId, // Add handymanId to the document
       });
-    }
+
+      // Optionally, if you want to link handymanId to the user's profile, you can do so here
+      String clientId = FirebaseAuth.instance.currentUser?.uid ?? ''; // Get the clientId from the user's profile or login context
+
+      // Check if the clientId is valid before updating
+      if (clientId.isNotEmpty) {
+        await FirebaseFirestore.instance.collection('Users').doc(clientId).update({
+          'handymanId': handymanId, // Link handymanId to the user's profile
+        });
+      }
 
       // Now save the FCM token
       if (_fcmToken != null) {
@@ -80,8 +77,8 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
       }
 
       // Store registration status in SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isHandymanRegistered', true);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isHandymanRegistered', true);
 
       // Show success message or navigate to another page
       ScaffoldMessenger.of(context).showSnackBar(
@@ -95,149 +92,153 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
       _experienceController.clear();
       _servicesController.clear();
 
-
       // Navigate to Handyman Dashboard after successful registration
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HandymanDashboard()), // Replace with your HandymanDashboard page
-    );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HandymanDashboard()), // Replace with your HandymanDashboard page
+      );
     }
   }
-   @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title: const Text(''), // You can add title here if needed
+        backgroundColor: const Color(0xFF2C3333), // Header color changed
       ),
-      body: Padding(
-        padding: EdgeInsets.zero,
-        child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(20.0),
-            child: Form( // Wrap fields in a Form widget for validation
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0.0),
-                    child: TextFormField(
-                      controller: _nameController,
+      body: Container(
+        color: const Color(0xFFE7F6F2), // Page color changed
+        child: Padding(
+          padding: EdgeInsets.zero,
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(20.0),
+              child: Form( // Wrap fields in a Form widget for validation
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child: TextFormField(
+                        controller: _nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
+                          hintText: 'Enter your name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _addressController,
                       decoration: const InputDecoration(
-                        labelText: 'Name',
-                        hintText: 'Enter your name',
+                        labelText: 'Address',
+                        hintText: 'Enter your address',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter your name';
+                          return 'Please enter your address';
                         }
                         return null;
                       },
                       style: const TextStyle(color: Colors.black),
                     ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _addressController,
-                    decoration: const InputDecoration(
-                      labelText: 'Address',
-                      hintText: 'Enter your address',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _qualificationController,
+                      decoration: const InputDecoration(
+                        labelText: 'Qualification',
+                        hintText: 'Enter your qualification',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your qualification';
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your address';
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                   const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _qualificationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Qualification',
-                      hintText: 'Enter your qualification',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _experienceController, // New Experience field
+                      decoration: const InputDecoration(
+                        labelText: 'Experience',
+                        hintText: 'Enter your experience in years',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your experience';
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your qualification';
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _experienceController, // New Experience field
-                    decoration: const InputDecoration(
-                      labelText: 'Experience',
-                      hintText: 'Enter your experience in years',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _servicesController,
+                      decoration: const InputDecoration(
+                        labelText: 'Services',
+                        hintText: 'Enter services offered (comma separated)',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter the services you provide';
+                        }
+                        return null;
+                      },
+                      style: const TextStyle(color: Colors.black),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your experience';
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _servicesController,
-                    decoration: const InputDecoration(
-                      labelText: 'Services',
-                      hintText: 'Enter services offered (comma separated)',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    const SizedBox(height: 24.0),
+                    ElevatedButton(
+                      onPressed: _registerHandyman, // Call the Firestore save function
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF395B64), // Button color changed
+                        foregroundColor: Colors.white, // Text color changed to white
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                       ),
+                      child: const Text('Register'),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter the services you provide';
-                      }
-                      return null;
-                    },
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 24.0),
-                  ElevatedButton(
-                    onPressed: _registerHandyman, // Call the Firestore save function
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 30, 209, 226),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    child: const Text('Register'),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -248,7 +249,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
 
   Widget _buildHeader() {
     return Container(
-      color: const Color(0xFF071952), 
+      color: const Color(0xFF2C3333), // Header color changed
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       child: const Center(
         child: Text(
@@ -259,10 +260,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
             color: Colors.white,
           ),
         ),
-     ),
-);
+      ),
+    );
+  }
 }
-}
-
-
-

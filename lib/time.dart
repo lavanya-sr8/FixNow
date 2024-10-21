@@ -26,9 +26,6 @@ class _SchedulePageState extends State<SchedulePage> {
   String? selectedTimeSlot;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Add the sendNotification function here
- 
-
   Future<void> bookAppointment() async {
     if (selectedDate != null && selectedTimeSlot != null) {
       // Combine date and selected time slot into a single DateTime object
@@ -41,22 +38,20 @@ class _SchedulePageState extends State<SchedulePage> {
 
       try {
         // Create a new document reference with auto-generated ID
-      DocumentReference bookingRef = _firestore.collection('bookings').doc();
+        DocumentReference bookingRef = _firestore.collection('bookings').doc();
         // Add the booking details to Firestore, including the bookingId
-      await bookingRef.set({
-        'bookingId': bookingRef.id, // Use the document ID as the booking ID
-        'clientId': widget.clientId, // Include client ID
-        'handymanId': widget.handymanId, // Assuming handyman has an ID property
-        'bookingTime': bookingTime.toIso8601String(), // Store as ISO string
-        'status': 'Pending', // Set initial status
-        // Include other details if needed
-        'service': widget.selectedService,
-        'handymanName': widget.handymanName,
-        'experience': widget.handymanExperience,
-        'bookedAt': DateTime.now(),
-      });
-
-      
+        await bookingRef.set({
+          'bookingId': bookingRef.id, // Use the document ID as the booking ID
+          'clientId': widget.clientId, // Include client ID
+          'handymanId': widget.handymanId, // Assuming handyman has an ID property
+          'bookingTime': bookingTime.toIso8601String(), // Store as ISO string
+          'status': 'Pending', // Set initial status
+          // Include other details if needed
+          'service': widget.selectedService,
+          'handymanName': widget.handymanName,
+          'experience': widget.handymanExperience,
+          'bookedAt': DateTime.now(),
+        });
 
         // Show a confirmation dialog
         showDialog(
@@ -91,73 +86,78 @@ class _SchedulePageState extends State<SchedulePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Schedule Appointment'),
+        backgroundColor: const Color(0xFF2C3333), // Header color changed
+        iconTheme: const IconThemeData(color: Colors.white), // Icon color set to white
       ),
-      body: Column(
-        children: [
-          ListTile(
-            title: Text(
-              'Select Date: ${selectedDate?.toString().split(' ')[0] ?? 'Not selected'}',
-            ),
-            trailing: const Icon(Icons.calendar_today),
-            onTap: () async {
-              DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: selectedDate ?? DateTime.now(),
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-              if (picked != null) {
-                setState(() {
-                  selectedDate = picked;
-                });
-              }
-            },
-          ),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                childAspectRatio: 2.0,
+      body: Container(
+        color: const Color(0xFFE7F6F2), // Page color changed to E7F6F2
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                'Select Date: ${selectedDate?.toString().split(' ')[0] ?? 'Not selected'}',
               ),
-              itemCount: 12,
-              itemBuilder: (BuildContext context, int index) {
-                int hour = 7 + index; // From 7 AM to 7 PM
-                return Card(
-                  margin: const EdgeInsets.all(4.0),
-                  color: Colors.blue[100],
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedTimeSlot = '$hour:00';
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Time slot selected: $hour:00'),
-                        ),
-                      );
-                    },
-                    child: Center(child: Text('$hour:00')),
-                  ),
+              trailing: const Icon(Icons.calendar_today, color: Color(0xFF395B64)), // Icon color changed
+              onTap: () async {
+                DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate ?? DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
                 );
+                if (picked != null) {
+                  setState(() {
+                    selectedDate = picked;
+                  });
+                }
               },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                bookAppointment().then((_) {
-                  // Optional: Additional logic after booking
-                  // You could navigate back or show a different message
-                });
-              }, // Call the function to save the booking
-              child: const Text('Book Now'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 2.0,
+                ),
+                itemCount: 12,
+                itemBuilder: (BuildContext context, int index) {
+                  int hour = 7 + index; // From 7 AM to 7 PM
+                  return Card(
+                    margin: const EdgeInsets.all(4.0),
+                    color: Colors.blue[100],
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedTimeSlot = '$hour:00';
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Time slot selected: $hour:00'),
+                          ),
+                        );
+                      },
+                      child: Center(child: Text('$hour:00')),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  bookAppointment().then((_) {
+                    // Optional: Additional logic after booking
+                    // You could navigate back or show a different message
+                  });
+                }, // Call the function to save the booking
+                child: const Text('Book Now'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

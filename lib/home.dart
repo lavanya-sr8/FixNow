@@ -72,18 +72,18 @@ class _HomePageState extends State<HomePage> {
           .update({
         'name': nameController.text,
         'aadhar_no': aadhaarController.text,
-        'address': addressController.text,  // Corrected this line
+        'address': addressController.text,
         'email_id': emailController.text,
         'phone_no': phoneController.text,
       });
 
       // Update the state to reflect the changes
       setState(() {
-        userName = nameController.text;  // Update the welcome text with the new name
+        userName = nameController.text;
         _profileData = {
           'name': nameController.text,
           'aadhar_no': aadhaarController.text,
-          'address': addressController.text,  // Corrected this line
+          'address': addressController.text,
           'email_id': emailController.text,
           'phone_no': phoneController.text,
         };
@@ -102,16 +102,16 @@ class _HomePageState extends State<HomePage> {
           'FixNow!',
           style: TextStyle(
             fontWeight: FontWeight.w300,
-            color: Color(0xFFEBF4F6),
+            color: Color(0xFFFFFFFF), // Change text color to white
             fontSize: 50.0,
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF071952),
+        backgroundColor: const Color(0xFF2C3333), // Change header color
         toolbarHeight: 100,
         actions: [
           IconButton(
-            icon: const Icon(Icons.person, color: Colors.white),
+            icon: const Icon(Icons.person, color: Colors.white), // Icon color white
             onPressed: () {
               // Toggle profile visibility
               setState(() {
@@ -121,108 +121,110 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(  // Wrap the body with SingleChildScrollView to avoid overflow
-        child: Center(
-          child: isLoading
-              ? const CircularProgressIndicator()
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Welcome, $userName!',
-                        style: const TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w300,
-                          color: Color(0xFF071952),
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      const Text(
-                        'FixNow is the perfect app to connect you with local handymen '
-                        'and get your repairs done quickly and efficiently.'
-                        'If you\'re a handyman, you can also connect with potential '
-                        'clients through this platform.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF071952),
-                        ),
-                      ),
-                      const SizedBox(height: 60),
-
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF37B7C3),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15.0,
-                            horizontal: 70.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+      body: Container(
+        color: const Color(0xFFE7F6F2), // Change page color
+        child: SingleChildScrollView(
+          child: Center(
+            child: isLoading
+                ? const CircularProgressIndicator()
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Welcome, $userName!',
+                          style: const TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w300,
+                            color: Color(0xFF071952),
                           ),
                         ),
-                        onPressed: () {
-                           Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ServHandyman(),
-                        ),
-                      );
-                          // Handle Get Started button action
-                        },
-                        child: const Text(
-                          'GET STARTED',
+                        const SizedBox(height: 40),
+                        const Text(
+                          'FixNow is the perfect app to connect you with local handymen '
+                          'and get your repairs done quickly and efficiently.'
+                          'If you\'re a handyman, you can also connect with potential '
+                          'clients through this platform.',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18.0,
-                            color: Color(0xFFEBF4F6),
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF071952),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 60),
 
-                      if (_showProfile && _profileData != null)
-                        Container(
-                          margin: const EdgeInsets.only(top: 20.0),
-                          padding: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: _isEditing
-                                ? _buildEditableFields()  // Show editable fields
-                                : _buildProfileView(),  // Show profile data view
-                          ),
-                        ),
-                      const SizedBox(height: 20),
-
-                      if (_showProfile)
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF37B7C3),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 15.0,
+                              horizontal: 70.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
                           onPressed: () {
-                            if (_isEditing) {
-                              _updateUserProfile();
-                            } else {
-                              setState(() {
-                                _isEditing = true;
-                              });
-                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ServHandyman(),
+                              ),
+                            );
                           },
-                          child: Text(_isEditing ? 'Save Changes' : 'Edit Profile'),
+                          child: const Text(
+                            'GET STARTED',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              color: Color(0xFFEBF4F6),
+                            ),
+                          ),
                         ),
-                    ],
+
+                        if (_showProfile && _profileData != null)
+                          Container(
+                            margin: const EdgeInsets.only(top: 20.0),
+                            padding: const EdgeInsets.all(15.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: _isEditing
+                                  ? _buildEditableFields()  // Show editable fields
+                                  : _buildProfileView(),  // Show profile data view
+                            ),
+                          ),
+                        const SizedBox(height: 20),
+
+                        if (_showProfile)
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_isEditing) {
+                                _updateUserProfile();
+                              } else {
+                                setState(() {
+                                  _isEditing = true;
+                                });
+                              }
+                            },
+                            child: Text(_isEditing ? 'Save Changes' : 'Edit Profile'),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
+          ),
         ),
       ),
     );
@@ -297,4 +299,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

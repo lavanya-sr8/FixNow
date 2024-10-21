@@ -2,7 +2,6 @@ import 'package:FixNow/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// import 'package:rename/rename.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -12,46 +11,57 @@ class SignUpPage extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         double toolbarHeight = constraints.maxHeight * 0.1;
-        double appBarFontSize = toolbarHeight*0.5;
-        double iconSize = appBarFontSize*1.5;
+        double appBarFontSize = toolbarHeight * 0.5;
+        double iconSize = appBarFontSize * 1.5;
         return MaterialApp(
-      title: 'FixNow: Find, Hire, Fix!',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: toolbarHeight,
-          title: 
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Image.asset('assets/fixnow_dark.png', fit: BoxFit.cover, height: iconSize, width: iconSize),
-            Text(
-            'FixNow!',
-            style: TextStyle(
-              fontWeight: FontWeight.w300,
-              color: Colors.white,
-              fontSize: appBarFontSize
+          title: 'FixNow: Find, Hire, Fix!',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: toolbarHeight,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/fixnow_dark.png',
+                    fit: BoxFit.cover,
+                    height: iconSize,
+                    width: iconSize,
+                  ),
+                  Text(
+                    'FixNow!',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white, // Title text color changed to white
+                      fontSize: appBarFontSize,
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: const Color(0xFF2C3333), // Header color changed
+              automaticallyImplyLeading: true,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white), // Icon color changed to white
+                onPressed: () {
+                  Navigator.pop(context); // Pop the current page and go back
+                },
+              ),
             ),
-          ) 
-          ],), 
-          backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
-          automaticallyImplyLeading: true, // Automatically adds back arrow
-          leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Pop the current page and go back
-          },
-        ),
-        ),
-        body: const Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[SignUpForm()],
-        )),
-      ),
+            body: Container(
+              color: const Color(0xFFE7F6F2), // Page color changed
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[SignUpForm()],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
-      }
-      );
-    
   }
 }
 
@@ -64,7 +74,7 @@ class SignUpForm extends StatefulWidget {
 
 class SignUpFormState extends State<SignUpForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController(); // Username Controller
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -96,7 +106,6 @@ class SignUpFormState extends State<SignUpForm> {
         final double formWidth = constraints.maxWidth * widthFactor;
 
         return Container(
-          color: const Color.fromRGBO(240, 221, 169, 0.004),
           padding: EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
           child: Center(
             child: SizedBox(
@@ -126,7 +135,7 @@ class SignUpFormState extends State<SignUpForm> {
                       },
                     ),
                     SizedBox(height: constraints.maxWidth * 0.02),
-                    
+
                     // Email TextField
                     TextFormField(
                       controller: _emailController,
@@ -149,7 +158,7 @@ class SignUpFormState extends State<SignUpForm> {
                       },
                     ),
                     SizedBox(height: constraints.maxWidth * 0.02),
-                    
+
                     // Password TextField
                     TextFormField(
                       controller: _passwordController,
@@ -162,7 +171,10 @@ class SignUpFormState extends State<SignUpForm> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black,),
+                          icon: Icon(
+                            obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            color: Colors.black,
+                          ),
                           onPressed: () {
                             setState(() {
                               obscureText = !obscureText;
@@ -181,7 +193,7 @@ class SignUpFormState extends State<SignUpForm> {
                       },
                     ),
                     SizedBox(height: constraints.maxWidth * 0.02),
-                    
+
                     // Confirm Password TextField
                     TextFormField(
                       controller: _confirmPasswordController,
@@ -194,7 +206,10 @@ class SignUpFormState extends State<SignUpForm> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(obscureTextConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.black,),
+                          icon: Icon(
+                            obscureTextConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            color: Colors.black,
+                          ),
                           onPressed: () {
                             setState(() {
                               obscureTextConfirm = !obscureTextConfirm;
@@ -213,13 +228,13 @@ class SignUpFormState extends State<SignUpForm> {
                       },
                     ),
                     SizedBox(height: constraints.maxWidth * 0.02),
-                    
+
                     // Sign Up Button
                     Center(
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            await signUp( _usernameController.text, _emailController.text, _passwordController.text, context);
+                            await signUp(_usernameController.text, _emailController.text, _passwordController.text, context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -232,7 +247,7 @@ class SignUpFormState extends State<SignUpForm> {
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
-                            color: Color.fromRGBO(100, 130, 173, 10),
+                            color: Color(0xFF395B64), // Sign Up button text color changed
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -250,33 +265,33 @@ class SignUpFormState extends State<SignUpForm> {
 
   // Sign up function to register the user with Firebase and store username
   Future<void> signUp(String username, String email, String password, BuildContext context) async {
-  try {
-    // Create user with email and password
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email.trim(),
-      password: password.trim(),
-    );
+    try {
+      // Create user with email and password
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
 
-    // Get the user's ID
-    String uid = userCredential.user!.uid;
+      // Get the user's ID
+      String uid = userCredential.user!.uid;
 
-    // Store username in Firestore
-    await FirebaseFirestore.instance.collection('Users').doc(uid).set({
-      'username': username.trim(),
-      'email': email.trim(),
-      'uid': uid
-    });
+      // Store username in Firestore
+      await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+        'username': username.trim(),
+        'email': email.trim(),
+        'uid': uid,
+      });
 
-    // Navigate to the home page or login page after sign-up
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>  UserProfile()),
-    );
-  } catch (e) {
-    // Handle sign-up errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Sign-up failed: ${e.toString()}')),
-    );
+      // Navigate to the home page or login page after sign-up
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const UserProfile()),
+      );
+    } catch (e) {
+      // Handle sign-up errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign-up failed: ${e.toString()}')),
+      );
+    }
   }
-}
 }

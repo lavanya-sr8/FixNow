@@ -12,13 +12,15 @@ class Notifications extends StatelessWidget {
         title: const Text('Notifications'),
         automaticallyImplyLeading: true, // Automatically adds back arrow
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF395B64)), // Icon color changed
           onPressed: () {
             Navigator.pop(context); // Pop the current page and go back
           },
         ),
+        backgroundColor: const Color(0xFF2C3333), // Header color changed
       ),
       body: const Bookings(),
+      backgroundColor: const Color(0xFFE7F6F2), // Page color changed
     );
   }
 }
@@ -68,10 +70,10 @@ class BookingSet extends State<Bookings> {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Success()),
-                        );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Success()),
+                            );
                             // confirm(context,'Would you like to confirm the acceptance of the request?', ConfirmationPage());
                           },
                           style: ElevatedButton.styleFrom(
@@ -91,11 +93,11 @@ class BookingSet extends State<Bookings> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                             Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Reject()),
-                        );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Reject()),
+                            );
 
                             // confirm(context,'Would you like to reject the request?', RejectionPage());
                           },
@@ -127,7 +129,7 @@ class BookingSet extends State<Bookings> {
   }
 }
 
-void confirm(BuildContext context, String message, Widget nextPage){
+void confirm(BuildContext context, String message, Widget nextPage) {
   Widget cancelButton = TextButton(
     child: const Text('Cancel'),
     onPressed: () {
@@ -139,25 +141,27 @@ void confirm(BuildContext context, String message, Widget nextPage){
     child: const Text('OK'),
     onPressed: () {
       Navigator.of(context).pop();
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> nextPage));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => nextPage));
     },
   );
-  
+
   AlertDialog confirmAlert = AlertDialog(
-    title: const Text('Confirm Booking',
-    style: TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w500
-    ),),
+    title: const Text(
+      'Confirm Booking',
+      style: TextStyle(
+          color: Colors.black, fontWeight: FontWeight.w500),
+    ),
     content: Text(message),
     actions: [
-      cancelButton, okButton
+      cancelButton,
+      okButton,
     ],
   );
-  
+
   showDialog(
-    context: context,
-    builder: (BuildContext context){
-      return confirmAlert;
-    });
+      context: context,
+      builder: (BuildContext context) {
+        return confirmAlert;
+      });
 }

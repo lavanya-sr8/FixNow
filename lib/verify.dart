@@ -18,13 +18,13 @@ class Verify extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF071952), // Background color #071952
+        backgroundColor: const Color(0xFF2C3333), // Header color changed
         toolbarHeight: 100, // Blue filled space with the FixNow! text
       ),
       body: Stack(
         children: <Widget>[
           Container(
-            color: const Color(0xFFEBF4F6), // Set background color to EBF4F6
+            color: const Color(0xFFE7F6F2), // Set background color to E7F6F2
           ),
           Center(
             child: Column(

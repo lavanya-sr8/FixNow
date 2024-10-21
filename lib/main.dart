@@ -6,11 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
 import 'sign_up.dart';
 
-// import 'header.dart';
-//import 'package:rename/rename.dart';
 // Initialize flutter_local_notifications plugin
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -40,7 +37,6 @@ Future<void> main() async {
   runApp(const FixNowApp());
 }
 
-
 class FixNowApp extends StatelessWidget {
   const FixNowApp({super.key});
 
@@ -54,6 +50,7 @@ class FixNowApp extends StatelessWidget {
         title: 'FixNow: Find, Hire, Fix!',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: const Color(0xFFE7F6F2), // Change page color
         ),
         home: Scaffold(
           appBar: AppBar(
@@ -61,24 +58,33 @@ class FixNowApp extends StatelessWidget {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/fixnow_dark.png',
-                    fit: BoxFit.cover, height: iconSize, width: iconSize),
+                Container(
+                  color: const Color(0xFF395B64), // Change icon color
+                  child: Image.asset(
+                    'assets/fixnow_dark.png',
+                    fit: BoxFit.cover,
+                    height: iconSize,
+                    width: iconSize,
+                  ),
+                ),
                 Text(
                   'FixNow!',
                   style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white,
-                      fontSize: appBarFontSize),
-                )
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white, // Change text color to white
+                    fontSize: appBarFontSize,
+                  ),
+                ),
               ],
             ),
-            backgroundColor: const Color.fromRGBO(100, 130, 173, 1),
+            backgroundColor: const Color(0xFF2C3333), // Change header color
           ),
           body: const Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[LoginForm()],
-          )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[LoginForm()],
+            ),
+          ),
         ),
       );
     });
@@ -121,8 +127,7 @@ class LoginFormState extends State<LoginForm> {
 
         return Container(
           color: const Color.fromRGBO(240, 221, 169, 0.004),
-          padding:
-              EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
+          padding: EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
           child: Center(
             child: SizedBox(
               width: formWidth,
@@ -132,12 +137,14 @@ class LoginFormState extends State<LoginForm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextFormField(
-                      controller: _emailController, // Email controller added
+                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: formWidth * 0.04),
+                          vertical: 16.0,
+                          horizontal: formWidth * 0.04,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -146,26 +153,23 @@ class LoginFormState extends State<LoginForm> {
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                            .hasMatch(value)) {
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(
-                        height:
-                            constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
                     TextFormField(
-                      controller:
-                          _passwordController, // Password controller added
-                      obscureText:
-                          !_isPasswordVisible, // Password visibility toggle added
+                      controller: _passwordController,
+                      obscureText: !_isPasswordVisible,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter password',
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: formWidth * 0.04),
+                          vertical: 16.0,
+                          horizontal: formWidth * 0.04,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -178,8 +182,7 @@ class LoginFormState extends State<LoginForm> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _isPasswordVisible =
-                                  !_isPasswordVisible; // Toggle password visibility
+                              _isPasswordVisible = !_isPasswordVisible;
                             });
                           },
                         ),
@@ -194,9 +197,7 @@ class LoginFormState extends State<LoginForm> {
                         return null;
                       },
                     ),
-                    SizedBox(
-                        height:
-                            constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -204,9 +205,11 @@ class LoginFormState extends State<LoginForm> {
                         TextButton(
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SignUpPage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignUpPage(),
+                              ),
+                            );
                           },
                           child: const Text(
                             'Sign up',
@@ -222,15 +225,12 @@ class LoginFormState extends State<LoginForm> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            await signIn(_emailController.text.trim(),
-                                _passwordController.text.trim(), context);
+                            await signIn(_emailController.text.trim(), _passwordController.text.trim(), context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(buttonWidth,
-                              50), // Full-width button within the form width
-                          backgroundColor:
-                              const Color.fromRGBO(226, 241, 255, 0.643),
+                          minimumSize: Size(buttonWidth, 50),
+                          backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -262,13 +262,13 @@ Future<void> signIn(String email, String password, BuildContext context) async {
       password: password,
     );
 
-    
     // On success, navigate to the next page (e.g., bookings or dashboard)
     Navigator.push(
       context,
       MaterialPageRoute(
-    builder: (context) => Dummy(),
-    ));
+        builder: (context) => Dummy(),
+      ),
+    );
   } catch (e) {
     // Handle errors (e.g., wrong credentials or user not found)
     ScaffoldMessenger.of(context).showSnackBar(
@@ -276,4 +276,3 @@ Future<void> signIn(String email, String password, BuildContext context) async {
     );
   }
 }
-

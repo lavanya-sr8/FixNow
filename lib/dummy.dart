@@ -14,18 +14,19 @@ class Dummy extends StatelessWidget {
           'FixNow!',
           style: TextStyle(
             fontWeight: FontWeight.w300,
-            color: Color(0xFFEBF4F6), // Text color EBF4F6
+            color: Colors.white, // Text color is now white
             fontSize: 50.0,
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF071952), // Background color #071952
+        backgroundColor: const Color(0xFF2C3333), // Background color is now 2C3333
         toolbarHeight: 100, // Blue filled space with the FixNow! text
       ),
       body: Stack(
         children: <Widget>[
+          // Set page background color to E7F6F2
           Container(
-            color: const Color(0xFFEBF4F6), // Set background color to EBF4F6
+            color: const Color(0xFFE7F6F2), // Page color is now E7F6F2
           ),
           Center(
             child: Column(
@@ -42,16 +43,17 @@ class Dummy extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.push(
-      context,
-      MaterialPageRoute(
-    builder: (context) => HomePage(userId: globalUserId!),
-    ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(userId: globalUserId!),
+                      ),
+                    );
                   },
                   child: const Text(
                     'HOME',
                     style: TextStyle(
                       fontSize: 18.0,
-                      color: Color(0xFFEBF4F6), // Text color EBF4F6
+                      color: Color(0xFFE7F6F2), // Text color is now E7F6F2
                     ),
                   ),
                 ),
@@ -68,16 +70,17 @@ class Dummy extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.push(
-      context,
-      MaterialPageRoute(
-    builder: (context) => ServHandyman(),
-    ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ServHandyman(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'NEXT',
                     style: TextStyle(
                       fontSize: 18.0,
-                      color: Color(0xFFEBF4F6), // Text color EBF4F6
+                      color: Color(0xFFE7F6F2), // Text color is now E7F6F2
                     ),
                   ),
                 ),

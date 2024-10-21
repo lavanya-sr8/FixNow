@@ -37,34 +37,35 @@ class ServiceSelectionPage extends StatelessWidget {
       Service(
         icon: Icons.brush,
         title: 'Painting',
-        description:
-            'Professional painting services for interior and exterior.',
+        description: 'Professional painting services for interior and exterior.',
       ),
       Service(
         icon: Icons.handyman,
         title: 'General Handyman',
-        description:
-            'A variety of handyman services for your home or business.',
+        description: 'A variety of handyman services for your home or business.',
       ),
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('FixNow!', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: const Color(0xFF2C3333), // Header color changed
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: services.length,
-        itemBuilder: (context, index) {
-          final service = services[index];
-          return ServiceCard(
-            icon: service.icon,
-            title: service.title,
-            description: service.description,
-            clientId: clientId!,
-          );
-        },
+      body: Container(
+        color: const Color(0xFFE7F6F2), // Page color changed
+        child: ListView.builder(
+          itemCount: services.length,
+          itemBuilder: (context, index) {
+            final service = services[index];
+            return ServiceCard(
+              icon: service.icon,
+              title: service.title,
+              description: service.description,
+              clientId: clientId!,
+            );
+          },
+        ),
       ),
     );
   }
@@ -97,15 +98,23 @@ class ServiceCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(icon, size: 48.0),
+                  Icon(icon, size: 48.0, color: const Color(0xFF395B64)), // Icon color changed
                   const SizedBox(width: 16.0),
                   Expanded(
-                    child: Text(title,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF395B64), // Title text color changed
+                      ),
+                    ),
                   ),
                 ],
               ),
-              Text(description, style: const TextStyle(fontSize: 12.0)),
+              Text(
+                description,
+                style: const TextStyle(fontSize: 12.0),
+              ),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
@@ -134,6 +143,8 @@ class ServiceCard extends StatelessWidget {
   }
 }
 
+// Handyman and HandymanListPage classes remain unchanged
+
 class Handyman {
   final String handymanId;
   final String name;
@@ -155,10 +166,10 @@ class Handyman {
       handymanId: doc.id,
       name: data['name'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
-      experience:int.tryParse(data['experience'].toString()) ?? 0,  // Convert to int safely
-      services: data['services'] != null && data['services'] is List 
-      ? List<String>.from(data['services']) 
-      : [],  // Default to an empty list if services is null or not a list
+      experience: int.tryParse(data['experience'].toString()) ?? 0, // Convert to int safely
+      services: data['services'] != null && data['services'] is List
+          ? List<String>.from(data['services'])
+          : [], // Default to an empty list if services is null or not a list
     );
   }
 
@@ -167,7 +178,6 @@ class Handyman {
     return '$name';
   }
 }
-
 
 class HandymanListPage extends StatefulWidget {
   final String selectedService;
@@ -193,12 +203,11 @@ class _HandymanListPageState extends State<HandymanListPage> {
         .where('services', arrayContains: widget.selectedService)
         .get();
 
-        // Add this debug print
-  print('Handymen fetched: ${snapshot.docs.length}');
-  
+    // Add this debug print
+    print('Handymen fetched: ${snapshot.docs.length}');
 
     // Map each document to Handyman using the fromFirestore factory constructor
-  return snapshot.docs.map((doc) => Handyman.fromFirestore(doc)).toList();
+    return snapshot.docs.map((doc) => Handyman.fromFirestore(doc)).toList();
   }
 
   @override
@@ -206,10 +215,10 @@ class _HandymanListPageState extends State<HandymanListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Available Handymen for ${widget.selectedService}'),
+        backgroundColor: const Color(0xFF2C3333), // Header color changed
       ),
       body: FutureBuilder<List<Handyman>>( // Change here
         future: fetchHandymen(),
-        
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -221,7 +230,7 @@ class _HandymanListPageState extends State<HandymanListPage> {
 
           final handymen = snapshot.data;
 
-           // Add this debug print to check the fetched handymen data
+          // Add this debug print to check the fetched handymen data
           print('Handymen data: $handymen');
 
           if (handymen == null || handymen.isEmpty) {
@@ -259,9 +268,6 @@ class HandymanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-     // Convert the map to a Handyman object
-    
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Padding(
@@ -284,13 +290,11 @@ class HandymanCard extends StatelessWidget {
                   const SizedBox(height: 4.0),
                   Row(
                     children: [
-                    
-                      
                       const SizedBox(width: 8.0),
                       Text(
                         '(${handymanObject.experience} years exp.)',
-                        style:
-                            const TextStyle(fontSize: 12.0, color: Colors.grey),
+                        style: const TextStyle(
+                            fontSize: 12.0, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -311,7 +315,7 @@ class HandymanCard extends StatelessWidget {
                     builder: (context) => SchedulePage(
                       handymanId: handymanObject.handymanId,
                       handymanName: handymanObject.name,
-                      handymanExperience:handymanObject.experience,
+                      handymanExperience: handymanObject.experience,
                       selectedService: selectedService,
                       clientId: clientId,
                     ),
