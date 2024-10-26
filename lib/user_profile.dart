@@ -20,6 +20,32 @@ class _UserProfileState extends State<UserProfile> {
   final TextEditingController aadhaarController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
+  // New variable to hold selected locality
+  String? selectedLocality;
+
+  // List of localities
+  final List<String> localities = [
+    'Gandhipuram',
+    'R S Puram',
+    'Peelamedu',
+    'Singanallur',
+    'Saibaba Colony',
+    'Ukkadam',
+    'Sivananda Colony',
+    'Vadavalli',
+    'Sulur',
+    'Thudiyalur',
+    'Karamadai',
+    'Ramanathapuram',
+    'Sundarapuram',
+    'Kovaipudur',
+    'Podanur',
+    'Perur',
+    'Town Hall',
+    'Race Course',
+    'Saravanampatti'
+  ];
+
   // Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -199,6 +225,37 @@ class _UserProfileState extends State<UserProfile> {
                       },
                     ),
                   ),
+                  const SizedBox(height: 20),
+
+                  // Dropdown for selecting locality
+                  SizedBox(
+                    width: 300,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedLocality,
+                      decoration: const InputDecoration(
+                        labelText: 'Select your locality',
+                        labelStyle: TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(),
+                      ),
+                      items: localities.map((locality) {
+                        return DropdownMenuItem(
+                          value: locality,
+                          child: Text(locality),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedLocality = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select your locality';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 40),
 
                   // SAVE button
@@ -220,6 +277,7 @@ class _UserProfileState extends State<UserProfile> {
                           'email_id': emailController.text.toLowerCase(),
                           'aadhar_no': aadhaarController.text,
                           'address': addressController.text,
+                          'locality': selectedLocality, // Add selected locality
                         });
 
                         // Store userId in global variable
