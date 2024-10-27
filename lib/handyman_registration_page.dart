@@ -1,9 +1,10 @@
 import 'package:FixNow/handyman_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore import
-import 'package:firebase_messaging/firebase_messaging.dart'; 
-import 'package:shared_preferences/shared_preferences.dart'; // FCM import
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart'; // Multi-select import
 
 class HandymanRegistrationPage extends StatefulWidget {
   const HandymanRegistrationPage({super.key});
@@ -18,84 +19,88 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _qualificationController = TextEditingController();
-  final _experienceController = TextEditingController(); // New experience controller
-  final _servicesController = TextEditingController(); // New services controller
+  final _experienceController = TextEditingController();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  String? _fcmToken; // Variable to store the FCM token
+
+  List<String> _selectedServices = [];
+  List<String> _selectedLocalities = [];
+  
+  final List<String> _services = [
+    "Plumbing",
+    "Electrical",
+    "Carpentry",
+    "Painting",
+    "Cleaning",
+  ];
+  
+  final List<String> _localities = [
+    'Gandhipuram',
+    'R S Puram',
+    'Peelamedu',
+    'Singanallur',
+    'Saibaba Colony',
+    'Ukkadam',
+    'Sivananda Colony',
+    'Vadavalli',
+    'Sulur',
+    'Thudiyalur',
+    'Karamadai',
+    'Ramanathapuram',
+    'Sundarapuram',
+    'Kovaipudur',
+    'Podanur',
+    'Perur',
+    'Town Hall',
+    'Race Course',
+    'Saravanampatti'
+  ];
+
+  String? _fcmToken;
 
   @override
   void initState() {
     super.initState();
-    _getFCMToken(); // Retrieve the FCM token when the widget is initialized
+    _getFCMToken();
   }
 
-  // Function to get FCM token
   Future<void> _getFCMToken() async {
     _fcmToken = await _firebaseMessaging.getToken();
-    print("FCM Token: $_fcmToken"); // Log the token (optional)
   }
-  
-  // Function to handle Firestore data submission
+
   Future<void> _registerHandyman() async {
     if (_formKey.currentState!.validate()) {
-      // Firestore collection reference
       CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
 
-      // Add data to Firestore and get the document reference
       DocumentReference handymanDocRef = await handymanProfile.add({
         'name': _nameController.text,
         'address': _addressController.text,
         'qualification': _qualificationController.text,
-        'experience': _experienceController.text, // Save experience field
-        'services': _servicesController.text.split(',').map((s) => s.trim()).toList(), // Save services as an array
-        'fcmToken': _fcmToken, // Include the FCM token here
+        'experience': _experienceController.text,
+        'services': _selectedServices,
+        'preferredLocalities': _selectedLocalities,  // Store selected localities
+        'fcmToken': _fcmToken,
       });
 
-      // Generate handymanId from the document ID
-      String handymanId = handymanDocRef.id; 
+      String handymanId = handymanDocRef.id;
+      await handymanDocRef.update({'handymanId': handymanId});
 
-      // Update the handyman document to include the handymanId
-      await handymanDocRef.update({
-        'handymanId': handymanId, // Add handymanId to the document
-      });
-
-      // Optionally, if you want to link handymanId to the user's profile, you can do so here
-      String clientId = FirebaseAuth.instance.currentUser?.uid ?? ''; // Get the clientId from the user's profile or login context
-
-      // Check if the clientId is valid before updating
+      String clientId = FirebaseAuth.instance.currentUser?.uid ?? '';
       if (clientId.isNotEmpty) {
         await FirebaseFirestore.instance.collection('Users').doc(clientId).update({
-          'handymanId': handymanId, // Link handymanId to the user's profile
+          'handymanId': handymanId,
         });
       }
 
-      // Now save the FCM token
-      if (_fcmToken != null) {
-        await handymanDocRef.update({
-          'fcmToken': _fcmToken, // Include the FCM token here
-        });
-      }
-
-      // Store registration status in SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isHandymanRegistered', true);
 
-      // Show success message or navigate to another page
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Handyman registered successfully!')),
       );
 
-      // Clear the form fields after successful registration
-      _nameController.clear();
-      _addressController.clear();
-      _qualificationController.clear();
-      _experienceController.clear();
-      _servicesController.clear();
-
-      // Navigate to Handyman Dashboard after successful registration
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HandymanDashboard()), // Replace with your HandymanDashboard page
+        MaterialPageRoute(builder: (context) => HandymanDashboard()),
       );
     }
   }
@@ -104,11 +109,11 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''), // You can add title here if needed
-        backgroundColor: const Color(0xFF2C3333), // Header color changed
+        title: const Text('Handyman Registration'),
+        backgroundColor: const Color(0xFF2C3333),
       ),
       body: Container(
-        color: const Color(0xFFE7F6F2), // Page color changed
+        color: const Color(0xFFE7F6F2),
         child: Padding(
           padding: EdgeInsets.zero,
           child: Center(
@@ -126,32 +131,23 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                 ],
               ),
               padding: const EdgeInsets.all(20.0),
-              child: Form( // Wrap fields in a Form widget for validation
+              child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildHeader(),
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
-                      child: TextFormField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Name',
-                          hintText: 'Enter your name',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          ),
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Enter your name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(color: Colors.black),
                       ),
+                      validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
@@ -163,13 +159,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your address';
-                        }
-                        return null;
-                      },
-                      style: const TextStyle(color: Colors.black),
+                      validator: (value) => value!.isEmpty ? 'Please enter your address' : null,
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
@@ -181,17 +171,11 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your qualification';
-                        }
-                        return null;
-                      },
-                      style: const TextStyle(color: Colors.black),
+                      validator: (value) => value!.isEmpty ? 'Please enter your qualification' : null,
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
-                      controller: _experienceController, // New Experience field
+                      controller: _experienceController,
                       decoration: const InputDecoration(
                         labelText: 'Experience',
                         hintText: 'Enter your experience in years',
@@ -199,38 +183,60 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your experience';
-                        }
-                        return null;
-                      },
-                      style: const TextStyle(color: Colors.black),
+                      validator: (value) => value!.isEmpty ? 'Please enter your experience' : null,
                     ),
                     const SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _servicesController,
-                      decoration: const InputDecoration(
-                        labelText: 'Services',
-                        hintText: 'Enter services offered (comma separated)',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    MultiSelectDialogField(
+                      items: _services.map((e) => MultiSelectItem(e, e)).toList(),
+                      title: const Text("Services"),
+                      selectedColor: Colors.blue,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
                         ),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter the services you provide';
-                        }
-                        return null;
+                      buttonText: const Text(
+                        "Select Services",
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                      onConfirm: (results) {
+                        setState(() {
+                          _selectedServices = results.cast<String>();
+                        });
                       },
-                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 16.0),
+                    MultiSelectDialogField(
+                      items: _localities.map((e) => MultiSelectItem(e, e)).toList(),
+                      title: const Text("Preferred Localities"),
+                      selectedColor: Colors.blue,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                      ),
+                      buttonText: const Text(
+                        "Select Preferred Localities",
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                      onConfirm: (results) {
+                        setState(() {
+                          _selectedLocalities = results.cast<String>();
+                        });
+                      },
                     ),
                     const SizedBox(height: 24.0),
                     ElevatedButton(
-                      onPressed: _registerHandyman, // Call the Firestore save function
+                      onPressed: _registerHandyman,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF395B64), // Button color changed
-                        foregroundColor: Colors.white, // Text color changed to white
+                        backgroundColor: const Color(0xFF395B64),
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -249,7 +255,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
 
   Widget _buildHeader() {
     return Container(
-      color: const Color(0xFF2C3333), // Header color changed
+      color: const Color(0xFF2C3333),
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       child: const Center(
         child: Text(
