@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 String? globalUserId;
 
 class UserProfile extends StatefulWidget {
-  const UserProfile({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+
+  const UserProfile({Key? key, required this.username, required this.email}) : super(key: key);
 
   @override
   _UserProfileState createState() => _UserProfileState();
@@ -14,14 +17,33 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   // Controllers for each input field
-  final TextEditingController nameController = TextEditingController();
+  late TextEditingController nameController;
   final TextEditingController phoneNoController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  late TextEditingController emailController;
   final TextEditingController aadhaarController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
   // Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the controllers with values from the arguments
+    nameController = TextEditingController(text: widget.username);
+    emailController = TextEditingController(text: widget.email);
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers to avoid memory leaks
+    nameController.dispose();
+    phoneNoController.dispose();
+    emailController.dispose();
+    aadhaarController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +58,11 @@ class _UserProfileState extends State<UserProfile> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF2C3333), // Header color changed
+        backgroundColor: const Color(0xFF2C3333),
         toolbarHeight: 100,
       ),
       body: Container(
-        color: const Color(0xFFE7F6F2), // Page color changed to E7F6F2
+        color: const Color(0xFFE7F6F2),
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Center(
@@ -48,7 +70,7 @@ class _UserProfileState extends State<UserProfile> {
               key: _formKey,
               child: Column(
                 children: [
-                  // Input for name
+                  // Username input field
                   SizedBox(
                     width: 300,
                     child: TextFormField(
@@ -76,7 +98,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Input for phone number
+                  // Phone number input field
                   SizedBox(
                     width: 300,
                     child: TextFormField(
@@ -107,7 +129,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Input for email
+                  // Email input field
                   SizedBox(
                     width: 300,
                     child: TextFormField(
@@ -138,7 +160,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Input for Aadhaar number
+                  // Aadhaar number input field
                   SizedBox(
                     width: 300,
                     child: TextFormField(
@@ -161,7 +183,7 @@ class _UserProfileState extends State<UserProfile> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your Aadhaar number';
                         } else {
-                          String cleanedValue = value.replaceAll(' ', ''); // Remove spaces
+                          String cleanedValue = value.replaceAll(' ', '');
                           if (cleanedValue.length != 12 || !RegExp(r'^[0-9]+$').hasMatch(cleanedValue)) {
                             return 'Please enter a valid 12-digit Aadhaar number';
                           }
@@ -172,7 +194,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Input for address
+                  // Address input field
                   SizedBox(
                     width: 300,
                     child: TextFormField(
@@ -201,7 +223,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   const SizedBox(height: 20),
 
-                  // SAVE button
+                  // Save button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF37B7C3),
@@ -212,7 +234,6 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // Save the data in Firestore
                         CollectionReference collRef = FirebaseFirestore.instance.collection('user_profile');
                         DocumentReference docRef = await collRef.add({
                           'name': nameController.text,
@@ -232,7 +253,7 @@ class _UserProfileState extends State<UserProfile> {
                           'email_id': emailController.text.toLowerCase(),
                         });
 
-                        // Navigate to HomePage without passing userId
+                        // Navigate to HomePage
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

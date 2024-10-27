@@ -1,3 +1,4 @@
+import 'package:FixNow/acceptedbookingspage.dart';
 import 'package:FixNow/ser_handyman.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -94,6 +95,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+   
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +122,17 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
+          IconButton(
+          icon: const Icon(Icons.assignment_turned_in, color: Colors.white), // New icon
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AcceptedBookingsPage(userId: widget.userId), // Pass userId
+              ),
+            );
+          },
+        ),
         ],
       ),
       body: Container(
@@ -155,6 +169,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 60),
 
+
+
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF37B7C3),
@@ -182,6 +198,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
+                        
+                      
 
                         if (_showProfile && _profileData != null)
                           Container(

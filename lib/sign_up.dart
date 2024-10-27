@@ -34,23 +34,23 @@ class SignUpPage extends StatelessWidget {
                     'FixNow!',
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
-                      color: Colors.white, // Title text color changed to white
+                      color: Colors.white,
                       fontSize: appBarFontSize,
                     ),
                   ),
                 ],
               ),
-              backgroundColor: const Color(0xFF2C3333), // Header color changed
+              backgroundColor: const Color(0xFF2C3333),
               automaticallyImplyLeading: true,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white), // Icon color changed to white
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
-                  Navigator.pop(context); // Pop the current page and go back
+                  Navigator.pop(context);
                 },
               ),
             ),
             body: Container(
-              color: const Color(0xFFE7F6F2), // Page color changed
+              color: const Color(0xFFE7F6F2),
               child: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +106,7 @@ class SignUpFormState extends State<SignUpForm> {
         final double formWidth = constraints.maxWidth * widthFactor;
 
         return Container(
-          padding: EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
+          padding: EdgeInsets.all(constraints.maxWidth * 0.05),
           child: Center(
             child: SizedBox(
               width: formWidth,
@@ -126,7 +126,6 @@ class SignUpFormState extends State<SignUpForm> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your username';
@@ -147,7 +146,6 @@ class SignUpFormState extends State<SignUpForm> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
@@ -182,7 +180,6 @@ class SignUpFormState extends State<SignUpForm> {
                           },
                         ),
                       ),
-                      scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter password';
@@ -217,7 +214,6 @@ class SignUpFormState extends State<SignUpForm> {
                           },
                         ),
                       ),
-                      scrollPadding: const EdgeInsets.all(16.0),
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
@@ -247,7 +243,7 @@ class SignUpFormState extends State<SignUpForm> {
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
-                            color: Color(0xFF395B64), // Sign Up button text color changed
+                            color: Color(0xFF395B64),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -282,10 +278,10 @@ class SignUpFormState extends State<SignUpForm> {
         'uid': uid,
       });
 
-      // Navigate to the home page or login page after sign-up
+      // Navigate to the UserProfile page with username and email autofilled
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const UserProfile()),
+        MaterialPageRoute(builder: (context) => UserProfile(username: username, email: email)),
       );
     } catch (e) {
       // Handle sign-up errors
@@ -295,3 +291,4 @@ class SignUpFormState extends State<SignUpForm> {
     }
   }
 }
+
