@@ -7,7 +7,7 @@ class AcceptedBookingsPage extends StatefulWidget {
   final String userId;
 
    AcceptedBookingsPage({Key? key, required this.userId}) : super(key: key);
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Ensure Firestore is initialized
+// Ensure Firestore is initialized
   @override
   _AcceptedBookingsPageState createState() => _AcceptedBookingsPageState();
 }
