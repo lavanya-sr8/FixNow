@@ -2,7 +2,6 @@ import 'package:FixNow/handyman_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart'; // Multi-select import
 
@@ -10,7 +9,8 @@ class HandymanRegistrationPage extends StatefulWidget {
   const HandymanRegistrationPage({super.key});
 
   @override
-  _HandymanRegistrationPageState createState() => _HandymanRegistrationPageState();
+  _HandymanRegistrationPageState createState() =>
+      _HandymanRegistrationPageState();
 }
 
 class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
@@ -20,11 +20,10 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   final _addressController = TextEditingController();
   final _qualificationController = TextEditingController();
   final _experienceController = TextEditingController();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   List<String> _selectedServices = [];
   List<String> _selectedLocalities = [];
-  
+
   final List<String> _services = [
     "Plumbing",
     "Electrical",
@@ -32,7 +31,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
     "Painting",
     "Cleaning",
   ];
-  
+
   final List<String> _localities = [
     'Gandhipuram',
     'R S Puram',
@@ -60,16 +59,12 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
   @override
   void initState() {
     super.initState();
-    _getFCMToken();
-  }
-
-  Future<void> _getFCMToken() async {
-    _fcmToken = await _firebaseMessaging.getToken();
   }
 
   Future<void> _registerHandyman() async {
     if (_formKey.currentState!.validate()) {
-      CollectionReference handymanProfile = FirebaseFirestore.instance.collection('handy_profile');
+      CollectionReference handymanProfile =
+          FirebaseFirestore.instance.collection('handy_profile');
 
       DocumentReference handymanDocRef = await handymanProfile.add({
         'name': _nameController.text,
@@ -77,7 +72,7 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
         'qualification': _qualificationController.text,
         'experience': _experienceController.text,
         'services': _selectedServices,
-        'preferredLocalities': _selectedLocalities,  // Store selected localities
+        'preferredLocalities': _selectedLocalities, // Store selected localities
         'fcmToken': _fcmToken,
       });
 
@@ -86,7 +81,10 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
 
       String clientId = FirebaseAuth.instance.currentUser?.uid ?? '';
       if (clientId.isNotEmpty) {
-        await FirebaseFirestore.instance.collection('Users').doc(clientId).update({
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(clientId)
+            .update({
           'handymanId': handymanId,
         });
       }
@@ -147,7 +145,8 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) => value!.isEmpty ? 'Please enter your name' : null,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Please enter your name' : null,
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
@@ -159,7 +158,8 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) => value!.isEmpty ? 'Please enter your address' : null,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Please enter your address' : null,
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
@@ -171,7 +171,9 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) => value!.isEmpty ? 'Please enter your qualification' : null,
+                      validator: (value) => value!.isEmpty
+                          ? 'Please enter your qualification'
+                          : null,
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
@@ -183,16 +185,20 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                       ),
-                      validator: (value) => value!.isEmpty ? 'Please enter your experience' : null,
+                      validator: (value) => value!.isEmpty
+                          ? 'Please enter your experience'
+                          : null,
                     ),
                     const SizedBox(height: 16.0),
                     MultiSelectDialogField(
-                      items: _services.map((e) => MultiSelectItem(e, e)).toList(),
+                      items:
+                          _services.map((e) => MultiSelectItem(e, e)).toList(),
                       title: const Text("Services"),
                       selectedColor: Colors.blue,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20.0)),
                         border: Border.all(
                           color: Colors.grey,
                           width: 2,
@@ -210,12 +216,15 @@ class _HandymanRegistrationPageState extends State<HandymanRegistrationPage> {
                     ),
                     const SizedBox(height: 16.0),
                     MultiSelectDialogField(
-                      items: _localities.map((e) => MultiSelectItem(e, e)).toList(),
+                      items: _localities
+                          .map((e) => MultiSelectItem(e, e))
+                          .toList(),
                       title: const Text("Preferred Localities"),
                       selectedColor: Colors.blue,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20.0)),
                         border: Border.all(
                           color: Colors.grey,
                           width: 2,
