@@ -69,43 +69,59 @@ class ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 48.0, color: const Color(0xFF395B64)),
-              const SizedBox(width: 16.0),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF395B64),
-                  ),
+  child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 48.0, color: const Color(0xFF395B64)),
+            const SizedBox(width: 16.0),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF395B64),
                 ),
               ),
-            ],
-          ),
-          Text(description),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HandymanListPage(
-                    selectedService: title,
-                    clientId: clientId,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HandymanListPage(
+                      selectedService: title,
+                      clientId: clientId,
+                    ),
                   ),
-                ),
-              );
-            },
-            child: const Text('Select'),
-          ),
-        ],
-      ),
-    );
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(50, 50),
+                          backgroundColor: const Color(0xFF00B4D8),
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        child: const Text(
+                          'Select',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8.0),
+        Text(description),
+      ],
+    ),
+  ),
+);
   }
 }
 
@@ -194,7 +210,10 @@ class _HandymanListPageState extends State<HandymanListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Available Handymen for ${widget.selectedService}'),
+        title: Text('Available Handymen for ${widget.selectedService}',
+        style: const TextStyle(
+          color: Colors.white
+        )),
         backgroundColor: const Color(0xFF2C3333),
       ),
       body: Column(
@@ -294,7 +313,15 @@ class HandymanCard extends StatelessWidget {
                   ),
                 );
             },
-            child: const Text('Book Now'),
+            style: ElevatedButton.styleFrom(
+                          minimumSize: Size(50, 50),
+                          backgroundColor: const Color(0xFF00B4D8),
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+            child: const Text('Book Now',
+            style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
