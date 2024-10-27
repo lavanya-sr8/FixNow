@@ -44,6 +44,7 @@ class FixNowApp extends StatelessWidget {
       double appBarFontSize = toolbarHeight * 0.5;
       double iconSize = appBarFontSize * 1.5;
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'FixNow: Find, Hire, Fix!',
         theme: ThemeData(
           primarySwatch: Colors.blue,
