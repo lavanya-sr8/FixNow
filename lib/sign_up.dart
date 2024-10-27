@@ -15,6 +15,7 @@ class SignUpPage extends StatelessWidget {
         double iconSize = appBarFontSize * 1.5;
         return MaterialApp(
           title: 'FixNow: Find, Hire, Fix!',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
@@ -77,7 +78,8 @@ class SignUpFormState extends State<SignUpForm> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool obscureText = true;
   bool obscureTextConfirm = true;
@@ -121,7 +123,8 @@ class SignUpFormState extends State<SignUpForm> {
                       decoration: InputDecoration(
                         labelText: 'Username',
                         hintText: 'Enter your username',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -141,7 +144,8 @@ class SignUpFormState extends State<SignUpForm> {
                       decoration: InputDecoration(
                         labelText: 'E-mail',
                         hintText: 'Enter E-mail',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -149,7 +153,8 @@ class SignUpFormState extends State<SignUpForm> {
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
@@ -164,13 +169,16 @@ class SignUpFormState extends State<SignUpForm> {
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter password',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            obscureText
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: Colors.black,
                           ),
                           onPressed: () {
@@ -198,13 +206,16 @@ class SignUpFormState extends State<SignUpForm> {
                       decoration: InputDecoration(
                         labelText: 'Confirm password',
                         hintText: 'Confirm password',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: formWidth * 0.04),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: formWidth * 0.04),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            obscureTextConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                            obscureTextConfirm
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                             color: Colors.black,
                           ),
                           onPressed: () {
@@ -230,12 +241,17 @@ class SignUpFormState extends State<SignUpForm> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            await signUp(_usernameController.text, _emailController.text, _passwordController.text, context);
+                            await signUp(
+                                _usernameController.text,
+                                _emailController.text,
+                                _passwordController.text,
+                                context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(buttonWidth, 50),
-                          backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
+                          backgroundColor:
+                              const Color.fromRGBO(226, 241, 255, 0.643),
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -260,10 +276,12 @@ class SignUpFormState extends State<SignUpForm> {
   }
 
   // Sign up function to register the user with Firebase and store username
-  Future<void> signUp(String username, String email, String password, BuildContext context) async {
+  Future<void> signUp(String username, String email, String password,
+      BuildContext context) async {
     try {
       // Create user with email and password
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
@@ -281,7 +299,9 @@ class SignUpFormState extends State<SignUpForm> {
       // Navigate to the UserProfile page with username and email autofilled
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UserProfile(username: username, email: email)),
+        MaterialPageRoute(
+            builder: (context) =>
+                UserProfile(username: username, email: email)),
       );
     } catch (e) {
       // Handle sign-up errors
@@ -291,4 +311,3 @@ class SignUpFormState extends State<SignUpForm> {
     }
   }
 }
-
