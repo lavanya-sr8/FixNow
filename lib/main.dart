@@ -1,8 +1,10 @@
 import 'package:FixNow/dummy.dart';
 import 'package:FixNow/firebase_options.dart';
+import 'package:FixNow/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -23,6 +25,9 @@ const InitializationSettings initializationSettings = InitializationSettings(
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message: ${message.messageId}');
 }
+
+// Global variable to store userId from Firestore
+String? simId;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -262,13 +267,26 @@ Future<void> signIn(String email, String password, BuildContext context) async {
       password: password,
     );
 
+    // Fetch userId from Firestore if email matches
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('home')
+        .where('email_id', isEqualTo: email)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      simId = querySnapshot.docs.first['userId'];
+      print('simId retrieved: $simId');
+    }
+
     // On success, navigate to the next page (e.g., bookings or dashboard)
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Dummy(),
-      ),
-    );
+    
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(userId: simId!),
+                      ),
+                    );
+                  
   } catch (e) {
     // Handle errors (e.g., wrong credentials or user not found)
     ScaffoldMessenger.of(context).showSnackBar(
@@ -276,3 +294,4 @@ Future<void> signIn(String email, String password, BuildContext context) async {
     );
   }
 }
+

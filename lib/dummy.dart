@@ -1,4 +1,5 @@
 import 'package:FixNow/home.dart';
+import 'package:FixNow/main.dart';
 import 'package:FixNow/ser_handyman.dart';
 import 'package:FixNow/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class Dummy extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomePage(userId: globalUserId!),
+                        builder: (context) => HomePage(userId: simId!),
                       ),
                     );
                   },
@@ -92,3 +93,4 @@ class Dummy extends StatelessWidget {
     );
   }
 }
+
