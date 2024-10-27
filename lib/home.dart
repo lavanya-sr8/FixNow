@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? userName;
+  String? userUid; // Declare userUid here
   bool isLoading = true;
   bool _showProfile = false;  // Toggle to show/hide the profile box
   bool _isEditing = false;    // Toggle between viewing and editing mode
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     fetchUserProfile();
+     // New function call
   }
 
   Future<void> fetchUserProfile() async {
@@ -49,6 +51,8 @@ class _HomePageState extends State<HomePage> {
           phoneController.text = _profileData?['phone_no'] ?? '';
           isLoading = false;
         });
+        // Now fetch the UID from the users collection based on the fetched username
+      await fetchUserUid(userName);
       } else {
         setState(() {
           userName = "Guest";
@@ -63,6 +67,35 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+
+  // New function to fetch UID from the users collection
+Future<void> fetchUserUid(String? userName) async {
+  if (userName == null || userName.isEmpty) {
+    print("Username is null or empty.");
+    return;
+  }
+  
+  try {
+    QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('username', isEqualTo: userName.toLowerCase()) // Assuming 'name' is the field you're matching against
+        .get();
+
+    if (userSnapshot.docs.isNotEmpty) {
+      setState(() {
+        userUid = userSnapshot.docs.first.id; // Get the document ID (UID)
+      });
+      print("Fetched UID: $userUid");
+    } else {
+      print("No matching user found in users collection.");
+    }
+  } catch (e) {
+    print("Error fetching user UID: $e");
+  }
+}
+
+  
+
 
   Future<void> _updateUserProfile() async {
     try {
@@ -125,13 +158,17 @@ class _HomePageState extends State<HomePage> {
           IconButton(
           icon: const Icon(Icons.assignment_turned_in, color: Colors.white), // New icon
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AcceptedBookingsPage(userId: widget.userId), // Pass userId
-              ),
-            );
-          },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => AcceptedBookingsPage(
+        userId: userUid ?? '', // Provide a default empty string if userUid is null
+      ),
+    ),
+  );
+},
+
+
         ),
         ],
       ),

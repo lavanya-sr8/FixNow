@@ -6,8 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AcceptedBookingsPage extends StatefulWidget {
   final String userId;
 
-  const AcceptedBookingsPage({Key? key, required this.userId}) : super(key: key);
-
+   AcceptedBookingsPage({Key? key, required this.userId}) : super(key: key);
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Ensure Firestore is initialized
   @override
   _AcceptedBookingsPageState createState() => _AcceptedBookingsPageState();
 }
@@ -29,7 +29,7 @@ class _AcceptedBookingsPageState extends State<AcceptedBookingsPage> {
         stream: FirebaseFirestore.instance
             .collection('bookings')
             .where('clientId', isEqualTo: widget.userId)
-            .where('status', isEqualTo: 'accepted')
+            .where('status', isEqualTo: 'Accepted')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -55,22 +55,75 @@ class _AcceptedBookingsPageState extends State<AcceptedBookingsPage> {
               DateTime bookingTime = DateTime.parse(bookingTimeString);
               String formattedDate = "${bookingTime.day}-${bookingTime.month}-${bookingTime.year}";
               String formattedTime = "${bookingTime.hour}:${bookingTime.minute.toString().padLeft(2, '0')}";
-
-              return ListTile(
-                title: Text(handymanName),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Date: $formattedDate"),
-                    Text("Time: $formattedTime"),
-                    Text("Status: $bookingStatus"),
-                  ],
+              return Card(
+      elevation: 4, // Adds shadow to the card
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Space around each card
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // Rounded corners
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0), // Padding inside the card
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Handyman: $handymanName",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8), // Space between the name and details
+            Text(
+              "Date: $formattedDate",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[700], // Slightly lighter grey
+              ),
+            ),
+            Text(
+              "Time: $formattedTime",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[700],
+              ),
+            ),
+            Text(
+              "Status: $bookingStatus",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: bookingStatus == 'Confirmed' ? Colors.green : Colors.red, // Color based on status
+              ),
+            ),
+            SizedBox(height: 16), // Space before the button
+            ElevatedButton(
+              onPressed: () async {
+                // Call the function to update the booking status to "Finished"
+                
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green, // Button color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Rounded corners
                 ),
-              );
-            }).toList(),
-          );
-        },
+              ),
+              child: Text(
+                "Finished",
+                style: TextStyle(color: Colors.white), // Button text color
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }).toList(),
+);
+},
       ),
     );
   }
 }
+
+
+  
