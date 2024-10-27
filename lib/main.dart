@@ -1,4 +1,3 @@
-import 'package:FixNow/dummy.dart';
 import 'package:FixNow/firebase_options.dart';
 import 'package:FixNow/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
