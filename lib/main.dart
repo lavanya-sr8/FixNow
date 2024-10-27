@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'sign_up.dart';
@@ -21,10 +20,6 @@ const InitializationSettings initializationSettings = InitializationSettings(
   android: initializationSettingsAndroid,
 );
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message: ${message.messageId}');
-}
-
 // Global variable to store userId from Firestore
 String? simId;
 
@@ -34,8 +29,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
   // Initialize local notifications
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   runApp(const FixNowApp());
@@ -131,7 +124,8 @@ class LoginFormState extends State<LoginForm> {
 
         return Container(
           color: const Color.fromRGBO(240, 221, 169, 0.004),
-          padding: EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
+          padding:
+              EdgeInsets.all(constraints.maxWidth * 0.05), // Responsive padding
           child: Center(
             child: SizedBox(
               width: formWidth,
@@ -157,13 +151,16 @@ class LoginFormState extends State<LoginForm> {
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(
+                        height:
+                            constraints.maxWidth * 0.05), // Responsive spacing
                     TextFormField(
                       controller: _passwordController,
                       obscureText: !_isPasswordVisible,
@@ -201,7 +198,9 @@ class LoginFormState extends State<LoginForm> {
                         return null;
                       },
                     ),
-                    SizedBox(height: constraints.maxWidth * 0.05), // Responsive spacing
+                    SizedBox(
+                        height:
+                            constraints.maxWidth * 0.05), // Responsive spacing
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -229,12 +228,14 @@ class LoginFormState extends State<LoginForm> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            await signIn(_emailController.text.trim(), _passwordController.text.trim(), context);
+                            await signIn(_emailController.text.trim(),
+                                _passwordController.text.trim(), context);
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(buttonWidth, 50),
-                          backgroundColor: const Color.fromRGBO(226, 241, 255, 0.643),
+                          backgroundColor:
+                              const Color.fromRGBO(226, 241, 255, 0.643),
                           textStyle: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -278,14 +279,13 @@ Future<void> signIn(String email, String password, BuildContext context) async {
     }
 
     // On success, navigate to the next page (e.g., bookings or dashboard)
-    
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(userId: simId!),
-                      ),
-                    );
-                  
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(userId: simId!),
+      ),
+    );
   } catch (e) {
     // Handle errors (e.g., wrong credentials or user not found)
     ScaffoldMessenger.of(context).showSnackBar(
@@ -293,4 +293,3 @@ Future<void> signIn(String email, String password, BuildContext context) async {
     );
   }
 }
-
